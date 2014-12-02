@@ -8,16 +8,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 /**
  * Class DefaultController
  * @package Tgt\AppBundle\Controller
+ *
+ * @Route("/admin")
  */
-class DefaultController extends Controller
+class AdminController extends Controller
 {
     /**
-     * @param $name
-     * @Route(“admin/hello”)
+     * @Route("/")
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($name)
+    public function indexAction()
     {
-        return $this->render('TgtAppBundle:Default:index.html.twig', array('name' => $name));
+        return $this->render('TgtAppBundle:Admin:index.html.twig');
     }
 }
