@@ -37,8 +37,7 @@
         "twbs/bootstrap": "3.0.*",
         "jquery/jquery": "1.10.*",
         "knplabs/knp-menu-bundle": "~2.0",
-        "knplabs/knp-paginator-bundle": "2.4.*",
-        "friendsofsymfony/user-bundle": "~2.0@dev"
+        "knplabs/knp-paginator-bundle": "2.4.*"
     },
     "scripts": {
         "post-install-cmd": [

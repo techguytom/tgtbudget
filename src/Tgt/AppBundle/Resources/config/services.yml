@@ -1,7 +1,0 @@
-parameters:
-#    tgt_app.example.class: Tgt\AppBundle\Example
-
-services:
-#    tgt_app.example:
-#        class: %tgt_app.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]

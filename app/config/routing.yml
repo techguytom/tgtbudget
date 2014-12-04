@@ -1,4 +1,0 @@
-TgtAppBundle:
-    resource: "@TgtAppBundle/Controller/"
-    type: annotation
-    prefix:   /
