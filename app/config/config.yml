@@ -29,6 +29,9 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - 'TbbcMoneyBundle:Form:fields.html.twig'
 
 # Assetic Configuration
 assetic:
@@ -104,3 +107,9 @@ knp_paginator:
 # braincrafted
 braincrafted_bootstrap:
     less_filter: less
+
+# tbbc money
+tbbc_money:
+    currencies: ["USD"]
+    reference_currency: "USD"
+    decimals: 2
