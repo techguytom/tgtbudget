@@ -2,8 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>{% block title %}Bootstrap 101 Template{% endblock %}</title>
-    <title></title>
+    <title>{% block title %}TGT Budget App{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet" media="screen">
@@ -14,10 +13,12 @@
     {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
 </head>
 <body>
-{{ knp_menu_render(menu, { 'style': 'justified-pills' }) }}
-{% include 'BraincraftedBootstrapBundle::flash.html.twig' %}
-{% block body %}
-{% endblock %}
+<div class="container">
+    {{ knp_menu_render('AppBundle:Builder:mainMenu', { 'style': 'justified-pills' }) }}
+    {% include 'BraincraftedBootstrapBundle::flash.html.twig' %}
+    {% block body %}
+    {% endblock %}
+</div>
 <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
 <script src="{{ asset('js/jquery.js') }}"></script>
 <!-- Include all JavaScripts, compiled by Assetic -->
