@@ -44,6 +44,14 @@ class Bill
      */
     private $budgetCurrency;
 
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="due_date", type="integer")
+     */
+    private $dueDate;
+
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="bills")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
@@ -115,6 +123,29 @@ class Bill
     {
         $this->budgetAmount = $budgetAmount->getAmount();
         $this->budgetCurrency = $budgetAmount->getCurrency()->getName();
+
+        return $this;
+    }
+
+    /**
+     * Get due date
+     *
+     * @return integer
+     */
+    public function getDueDate()
+    {
+        return $this->dueDate;
+    }
+
+    /**
+     * Set due date
+     *
+     * @param integer $dueDate
+     * @return Bill
+     */
+    public function setDueDate($dueDate)
+    {
+        $this->dueDate = $dueDate;
 
         return $this;
     }

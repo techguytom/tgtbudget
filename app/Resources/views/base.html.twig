@@ -2,8 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>{% block title %}Bootstrap 101 Template{% endblock %}</title>
-    <title></title>
+    <title>{% block title %}TGT Budget App{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet" media="screen">
@@ -13,8 +12,19 @@
     <!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
     {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
 </head>
-<body>
-{% block body %}{% endblock %}
+<body role="document" style="padding-top: 70px;">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div id="navbar" class="navbar-collapse collapse">
+            {{ knp_menu_render('main', { 'style': 'navbar' }) }}
+        </div>
+    </div>
+</nav>
+<div class="container" role="main">
+    {% include 'BraincraftedBootstrapBundle::flash.html.twig' %}
+    {% block body %}
+    {% endblock %}
+</div>
 <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
 <script src="{{ asset('js/jquery.js') }}"></script>
 <!-- Include all JavaScripts, compiled by Assetic -->
