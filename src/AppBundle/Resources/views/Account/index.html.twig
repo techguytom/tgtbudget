@@ -1,5 +1,8 @@
 {# AppBundle:Action/index.html.twig.html.twig #}
 {% extends 'base.html.twig' %}
 {% block body %}
-Account
+<h1>Account Setup</h1>
+    {{ form_start(accountForm, {'style': 'horizontal'}) }}
+    {{ form_widget(accountForm) }}
+    {{ form_end(accountForm) }}
 {% endblock %}

@@ -4,6 +4,9 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity\Account;
+use AppBundle\Entity\AccountType;
 
 /**
  * Class AppController
@@ -23,12 +26,22 @@ class AppController extends Controller
     }
 
     /**
-     * Account Page
+     * Account index page
      *
+     * @param Request $request
      * @Route("/account", name="account")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function AccountAction()
+    public function AccountAction(Request $request)
     {
-        return $this->render('AppBundle:Account:index.html.twig');
+        /** TODO: need to persist account */
+        $account = new Account();
+        $form = $this->createForm('accountCreate', $account);
+
+        return $this->render('AppBundle:Account:index.html.twig', array(
+            'accountForm' => $form->createView(),
+            )
+        );
     }
 }

@@ -11,3 +11,8 @@ services:
         scope: request # needed as we have the request as a dependency here
         tags:
             - { name: knp_menu.menu, alias: main } # The alias is what is used to retrieve the menu
+
+    app.form.type.account:
+        class: AppBundle\Form\Type\AccountCreateType
+        tags:
+            - { name: form.type, alias: accountCreate }
