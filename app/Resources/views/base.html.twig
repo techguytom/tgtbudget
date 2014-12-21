@@ -12,9 +12,15 @@
     <!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
     {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
 </head>
-<body>
-<div class="container">
-    {{ knp_menu_render('AppBundle:Builder:mainMenu', { 'style': 'justified-pills' }) }}
+<body role="document" style="padding-top: 70px;">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div id="navbar" class="navbar-collapse collapse">
+            {{ knp_menu_render('main', { 'style': 'navbar' }) }}
+        </div>
+    </div>
+</nav>
+<div class="container" role="main">
     {% include 'BraincraftedBootstrapBundle::flash.html.twig' %}
     {% block body %}
     {% endblock %}
