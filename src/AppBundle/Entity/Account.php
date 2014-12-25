@@ -72,6 +72,12 @@ class Account
     protected $transactions;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="accounts")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AccountType", inversedBy="accounts")
      * @ORM\JoinColumn(name="account_type", referencedColumnName="id")
      */
@@ -102,6 +108,7 @@ class Account
      * Set name
      *
      * @param string $name
+     *
      * @return Account
      */
     public function setName($name)
@@ -125,6 +132,7 @@ class Account
      * Set accountNumber
      *
      * @param integer $accountNumber
+     *
      * @return Account
      */
     public function setAccountNumber($accountNumber)
@@ -164,6 +172,7 @@ class Account
      * Set credit line
      *
      * @param Money $creditLine
+     *
      * @return Money
      */
     public function setCreditLine(Money $creditLine)
@@ -194,6 +203,7 @@ class Account
      * Set available balance
      *
      * @param Money $availableBalance
+     *
      * @return Money
      */
     public function setAvailableBalance(Money $availableBalance)
@@ -205,6 +215,8 @@ class Account
     }
 
     /**
+     * Get Transactions
+     *
      * @return transaction[]|ArrayCollection
      */
     public function getTransactions()
@@ -213,14 +225,21 @@ class Account
     }
 
     /**
+     * Set Transactions
+     *
      * @param transaction[]|ArrayCollection $transactions
+     *
+     * @return $this
      */
     public function setTransactions($transactions)
     {
         $this->transactions = $transactions;
+        return $this;
     }
 
     /**
+     * Get Account Type
+     *
      * @return AccountType
      */
     public function getType()
@@ -229,10 +248,38 @@ class Account
     }
 
     /**
+     * Set Account Type
+     *
      * @param AccountType $type
+     *
+     * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * Get User
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set User
+     *
+     * @param User $user
+     *
+     * @return $this
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
 }

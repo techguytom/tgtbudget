@@ -12,7 +12,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * [Class desc. text goes here...]
+ * Account Create Type
  *
  * @package    AppBundle\Form\Type
  * @subpackage Symfony2

@@ -35,6 +35,12 @@ class AccountType
     protected $accounts;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="accountTypes")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
      * constructor
      *
      * initialize array collections
@@ -58,6 +64,7 @@ class AccountType
      * Set name
      *
      * @param string $name
+     *
      * @return AccountType
      */
     public function setName($name)
@@ -78,6 +85,8 @@ class AccountType
     }
 
     /**
+     * Get Accounts
+     *
      * @return account[]|ArrayCollection
      */
     public function getAccounts()
@@ -86,10 +95,40 @@ class AccountType
     }
 
     /**
+     * Set Accounts
+     *
      * @param account[]|ArrayCollection $accounts
+     *
+     * @return $this
      */
     public function setAccounts($accounts)
     {
         $this->accounts = $accounts;
+
+        return $this;
+    }
+
+    /**
+     * Get User
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set User
+     *
+     * @param User $user
+     *
+     * @return $this
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

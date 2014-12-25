@@ -48,6 +48,7 @@ class Setting
      * Set transactionLeadTime
      *
      * @param integer $transactionLeadTime
+     *
      * @return Setting
      */
     public function setTransactionLeadTime($transactionLeadTime)
@@ -68,6 +69,8 @@ class Setting
     }
 
     /**
+     * Get User
+     *
      * @return User
      */
     public function getUser()
@@ -76,10 +79,16 @@ class Setting
     }
 
     /**
+     * Set User
+     *
      * @param User $user
+     *
+     * @return $this
      */
     public function setUser($user)
     {
         $this->user = $user;
+
+        return $this;
     }
 }

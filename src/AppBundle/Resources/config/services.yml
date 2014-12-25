@@ -16,3 +16,14 @@ services:
         class: AppBundle\Form\Type\AccountCreateType
         tags:
             - { name: form.type, alias: accountCreate }
+
+    app.form.type.accountType:
+        class: AppBundle\Form\Type\AccountTypeType
+        tags:
+            - { name: form.type, alias: accountType }
+
+    validator.unique.unique_user_type_validator:
+        class: AppBundle\Validator\Constraints\UniqueUserTypeValidator
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: validator.constraint_validator, alias: unique_user_type_validator }

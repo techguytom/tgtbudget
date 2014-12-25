@@ -40,6 +40,12 @@ class Category
     protected $bills;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="categories")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
      * construct
      *
      * initialize array collections
@@ -83,6 +89,8 @@ class Category
     }
 
     /**
+     * Get Transactions
+     *
      * @return transaction[]|ArrayCollection
      */
     public function getTransactions()
@@ -91,14 +99,22 @@ class Category
     }
 
     /**
+     * Set Transactions
+     *
      * @param transaction[]|ArrayCollection $transactions
+     *
+     * @return $this
      */
     public function setTransactions($transactions)
     {
         $this->transactions = $transactions;
+
+        return $this;
     }
 
     /**
+     * Get Bills
+     *
      * @return transaction[]|ArrayCollection
      */
     public function getBills()
@@ -107,10 +123,39 @@ class Category
     }
 
     /**
+     * Set Bills
+     *
      * @param transaction[]|ArrayCollection $bills
+     *
+     * @return $this
      */
     public function setBills($bills)
     {
         $this->bills = $bills;
+
+        return $this;
+    }
+
+    /**
+     * Get User
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set User
+     *
+     * @param User $user
+     *
+     * @return $this
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
 }
