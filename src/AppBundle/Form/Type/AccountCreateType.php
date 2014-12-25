@@ -8,8 +8,11 @@
 
 namespace AppBundle\Form\Type;
 
+use AppBundle\Entity\AccountTypeRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
  * Account Create Type
@@ -20,45 +23,62 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class AccountCreateType extends AbstractType
 {
+    protected $tokenStorage;
+
+    public function __construct(TokenStorage $storage)
+    {
+        $this->tokenStorage = $storage;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $user = $this->tokenStorage->getToken()
+                                   ->getUser();
+
         $builder
             ->add(
                 'name',
                 'text',
                 array(
-                    'label' => 'Account Name',
+                    'label'    => 'Account Name',
+                    'required' => true,
                 )
             )
             ->add(
                 'type',
                 'entity',
                 array(
-                    'class'       => 'AppBundle\Entity\AccountType',
-                    'data_class'  => 'AppBundle\Entity\AccountType',
-                    'property'    => 'name',
-                    'placeholder' => 'Select An Account Type',
+                    'class'         => 'AppBundle\Entity\AccountType',
+                    'property'      => 'name',
+                    'placeholder'   => 'Select An Account Type',
+                    'required'      => true,
+                    'query_builder' => function (AccountTypeRepository $accountTypeRepository) use ($user) {
+                        return $accountTypeRepository->queryByUser($user);
+                    }
                 )
             )
             ->add(
                 'accountNumber',
                 'integer',
                 array(
-                    'label' => 'Last 4 Digits of Account Number',
+                    'label'    => 'Last 4 Digits of Account Number',
+                    'required' => false,
                 )
             )
             ->add(
                 'availableBalance',
                 'tbbc_money',
                 array(
-                    'label' => 'Available Balance',
+                    'label'    => 'Available Balance',
+                    'required' => true,
                 )
             )
             ->add(
                 'creditLine',
                 'tbbc_money',
                 array(
-                    'label' => 'Credit Line',
+                    'label'    => 'Credit Line',
+                    'required' => false,
                 )
             )
             ->add('save', 'submit');

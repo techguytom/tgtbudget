@@ -1,6 +1,6 @@
 <?php
 /**
- * UniqueUserType
+ * UniqueName
  * 
  * @package AppBundle\Validator\Constraints 
 
@@ -20,12 +20,17 @@ use Symfony\Component\Validator\Constraint;
  * @subpackage
  * @author Tom Jenkins <tom@thejenkinsweb.com>
   */
-class UniqueUserType extends Constraint
+class UniqueName extends Constraint
 {
-    public $message = 'You have already created the "%string" account type.';
+    public $message = 'You have already used this name.';
 
     public function validatedBy()
     {
-        return 'unique_user_type_validator';
+        return 'unique_name_validator';
+    }
+
+    public function getTargets()
+    {
+        return self::CLASS_CONSTRAINT;
     }
 }

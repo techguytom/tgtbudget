@@ -4,12 +4,14 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Validator\Constraints\UniqueName;
 
 /**
  * AccountType
  *
  * @ORM\Table(name="account_types")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\AccountTypeRepository")
+ * @UniqueName()
  */
 class AccountType
 {

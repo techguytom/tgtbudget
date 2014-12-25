@@ -14,6 +14,8 @@ services:
 
     app.form.type.account:
         class: AppBundle\Form\Type\AccountCreateType
+        arguments:
+            - "@security.token_storage"
         tags:
             - { name: form.type, alias: accountCreate }
 
@@ -22,8 +24,10 @@ services:
         tags:
             - { name: form.type, alias: accountType }
 
-    validator.unique.unique_user_type_validator:
-        class: AppBundle\Validator\Constraints\UniqueUserTypeValidator
-        arguments: ["@doctrine.orm.entity_manager"]
+    validator.unique.unique_name_validator:
+        class: AppBundle\Validator\Constraints\UniqueNameValidator
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
         tags:
-            - { name: validator.constraint_validator, alias: unique_user_type_validator }
+            - { name: validator.constraint_validator, alias: unique_name_validator }

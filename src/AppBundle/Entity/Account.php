@@ -6,12 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Money\Currency;
 use Money\Money;
+use AppBundle\Validator\Constraints\UniqueName;
 
 /**
  * Account
  *
  * @ORM\Table(name="accounts")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\AccountRepository")
+ * @UniqueName()
  */
 class Account
 {
@@ -34,21 +36,21 @@ class Account
     /**
      * @var integer
      *
-     * @ORM\Column(name="account_number", type="integer")
+     * @ORM\Column(name="account_number", type="integer", nullable=true)
      */
     private $accountNumber;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="credit_line_amount", type="integer")
+     * @ORM\Column(name="credit_line_amount", type="integer", nullable=true)
      */
     private $creditLineAmount;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="credit_line_currency", type="string", length=64)
+     * @ORM\Column(name="credit_line_currency", type="string", length=64, nullable=true)
      */
     private $creditLineCurrency;
 

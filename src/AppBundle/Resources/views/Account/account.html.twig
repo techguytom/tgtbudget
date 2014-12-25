@@ -1,8 +1,34 @@
 {# AppBundle:Action/index.html.twig.html.twig #}
 {% extends 'base.html.twig' %}
 {% block body %}
-<h1>Account Setup</h1>
+    <h1>Account Setup</h1>
     {{ form_start(accountForm, {'style': 'horizontal'}) }}
     {{ form_widget(accountForm) }}
     {{ form_end(accountForm) }}
+    <h2>Account List</h2>
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th>Account</th>
+                <th>Available Balance</th>
+                <th>Credit Limit</th>
+            </tr>
+        </thead>
+        {% for account in accounts %}
+            <tr>
+                <td>
+                    {{ account.name }}
+                    {% if account.accountNumber != null %}
+                        &nbsp;-&nbsp;{{ account.accountNumber }}
+                    {% endif %}
+                </td>
+                <td>{{ account.availableBalance | money_localized_format }}</td>
+                <td>
+                    {% if account.creditLine != null %}
+                        {{ account.creditLine | money_localized_format }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
