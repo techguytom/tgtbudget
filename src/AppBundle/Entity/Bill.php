@@ -49,9 +49,16 @@ class Bill
     /**
      * @var integer
      *
-     * @ORM\Column(name="due_date", type="integer")
+     * @ORM\Column(name="due_date", type="date")
      */
     private $dueDate;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="recurring", type="boolean")
+     */
+    private $recurring;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="bills")
@@ -135,6 +142,7 @@ class Bill
      * Set price
      *
      * @param Money $budgetAmount
+     *
      * @return Money
      */
     public function setBudgetAmount(Money $budgetAmount)
@@ -159,11 +167,36 @@ class Bill
      * Set due date
      *
      * @param integer $dueDate
+     *
      * @return Bill
      */
     public function setDueDate($dueDate)
     {
         $this->dueDate = $dueDate;
+
+        return $this;
+    }
+
+    /**
+     * Get recurring
+     *
+     * @return boolean
+     */
+    public function getRecurring()
+    {
+        return $this->recurring;
+    }
+
+    /**
+     * Set recurring
+     *
+     * @param mixed $recurring
+     *
+     * @return Bill
+     */
+    public function setRecurring($recurring)
+    {
+        $this->recurring = $recurring;
 
         return $this;
     }
@@ -204,9 +237,10 @@ class Bill
 
     /**
      * Set User
+     *
      * @param User $user
      *
-     * @return $this
+     * @return Bill
      */
     public function setUser($user)
     {
@@ -230,7 +264,7 @@ class Bill
      *
      * @param transaction[]|ArrayCollection $transactions
      *
-     * @return $this
+     * @return Bill
      */
     public function setAccounts($transactions)
     {

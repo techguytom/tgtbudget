@@ -10,6 +10,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use AppBundle\Model\Validation;
 
 /**
@@ -21,6 +22,36 @@ use AppBundle\Model\Validation;
   */
 class CategoryRepository extends EntityRepository implements Validation
 {
+    /**
+     * Query builder for types by user
+     *
+     * @param User $user
+     *
+     * @return QueryBuilder
+     */
+    public function queryByUser(User $user)
+    {
+        $query = $this->createQueryBuilder('t')
+                      ->orderBy('t.name', 'ASC')
+                      ->where('t.user = :id')
+                      ->setParameter('id', $user->getId());
+
+        return $query;
+    }
+
+    /**
+     * Get results by user
+     *
+     * @param $user
+     *
+     * @return array
+     */
+    public function findByUser($user)
+    {
+        return $this->queryByUser($user)
+                    ->getQuery()
+                    ->getResult();
+    }
 
     /**
      * Find any entries that share a user and a name

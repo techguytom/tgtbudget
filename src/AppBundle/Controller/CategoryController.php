@@ -8,7 +8,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\Type\CategoryType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,7 +34,7 @@ class CategoryController extends Controller
      *
      * @return Response
      */
-    public function CategoryAction(Request $request)
+    public function categoryAction(Request $request)
     {
         $category = new Category();
         $form     = $this->createForm('category', $category);

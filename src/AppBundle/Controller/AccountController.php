@@ -34,7 +34,7 @@ class AccountController extends Controller
      *
      * @return Response
      */
-    public function AccountAction(Request $request)
+    public function accountAction(Request $request)
     {
         $account = new Account();
         $form    = $this->createForm('accountCreate', $account);
@@ -75,7 +75,7 @@ class AccountController extends Controller
      *
      * @return Response
      */
-    public function AccountTypesAction(Request $request)
+    public function accountTypesAction(Request $request)
     {
         $accountType = new AccountType();
         $form        = $this->createForm('accountType', $accountType);

@@ -9,7 +9,6 @@
 namespace AppBundle\Form\Type;
 
 use AppBundle\Entity\AccountTypeRepository;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
