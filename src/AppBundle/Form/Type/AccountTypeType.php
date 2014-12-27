@@ -1,6 +1,6 @@
 <?php
 /**
- * [File description text goes here...]
+ * AccountTypeType.php
  * 
  * @package AppBundle\Form\Type 
 
@@ -13,12 +13,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * [Class desc. text goes here...]
+ * Account Type Form Type
  *
  * @package AppBundle\Form\Type 
 
  * @subpackage
- * @author YOUR_NAME_HERE <techguytom@nerdery.com>
+ * @author Tom Jenkins <tom@techguytom.com>
   */
 class AccountTypeType extends AbstractType
 {

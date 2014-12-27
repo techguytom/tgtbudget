@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
  *
  * @package AppBundle\Validator\Constraints
  * @subpackage
- * @author  Tom Jenkins <tom@thejenkinsweb.com>
+ * @author  Tom Jenkins <tom@techguytom.com>
  */
 class UniqueNameValidator extends ConstraintValidator
 {

@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraint;
  * @Annotation
  *
  * @subpackage
- * @author Tom Jenkins <tom@thejenkinsweb.com>
+ * @author Tom Jenkins <tom@techguytom.com>
   */
 class UniqueName extends Constraint
 {
