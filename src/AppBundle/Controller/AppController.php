@@ -1,4 +1,10 @@
 <?php
+/**
+ * AppController.php
+ *
+ * @package AppBundle\Controller
+ * @subpackage
+ */
 
 namespace AppBundle\Controller;
 

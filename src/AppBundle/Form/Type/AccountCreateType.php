@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
  *
  * @package    AppBundle\Form\Type
  * @subpackage Symfony2
- * @author     Tom Jenkins <$tjenkins@nerdery.com>
+ * @author     Tom Jenkins <tom@techguytom.com>
  */
 class AccountCreateType extends AbstractType
 {

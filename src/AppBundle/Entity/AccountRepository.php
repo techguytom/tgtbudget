@@ -16,7 +16,7 @@ use AppBundle\Model\Validation;
  *
  * @package AppBundle\Entity
  * @subpackage
- * @author  Tom Jenkins <tom@thejenkinsweb.com>
+ * @author  Tom Jenkins <tom@techguytom.com>
  */
 class AccountRepository extends EntityRepository implements Validation
 {

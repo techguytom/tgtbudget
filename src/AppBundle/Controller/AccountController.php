@@ -21,7 +21,7 @@ use AppBundle\Entity\AccountType;
  *
  * @package AppBundle\Controller
  * @subpackage
- * @author  Tom Jenkins <techguytom@nerdery.com>
+ * @author  Tom Jenkins <tom@techguytom.com>
  */
 class AccountController extends Controller
 {
@@ -34,7 +34,7 @@ class AccountController extends Controller
      *
      * @return Response
      */
-    public function AccountViewAction(Request $request)
+    public function AccountAction(Request $request)
     {
         $account = new Account();
         $form    = $this->createForm('accountCreate', $account);

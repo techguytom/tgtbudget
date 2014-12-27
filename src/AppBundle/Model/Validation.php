@@ -17,7 +17,7 @@ use AppBundle\Entity\User;
  * @package AppBundle\Model 
 
  * @subpackage
- * @author Tom Jenkins <techguytom@nerdery.com>
+ * @author Tom Jenkins <tom@techguytom.com>
   */
 interface Validation
 {
