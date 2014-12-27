@@ -42,7 +42,7 @@ class Builder
         $menu->addChild('Account', array('route' => 'account'));
         $menu->addChild('Settings', array('uri' => '#'));
         $menu['Settings']->addChild('Account Types', array('route' => 'accountTypes'));
-//        $menu['Settings']->addChild('Billing Categories', array('route' => 'category_setup'));
+        $menu['Settings']->addChild('Billing Categories', array('route' => 'categories'));
 //        $menu['Settings']->addChild('General', array('route' => 'general_settings'));
 
         return $menu;

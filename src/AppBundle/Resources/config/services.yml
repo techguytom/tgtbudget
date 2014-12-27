@@ -24,6 +24,11 @@ services:
         tags:
             - { name: form.type, alias: accountType }
 
+    app.form.type.categoryType:
+        class: AppBundle\Form\Type\CategoryType
+        tags:
+            - { name: form.type, alias: category }
+
     validator.unique.unique_name_validator:
         class: AppBundle\Validator\Constraints\UniqueNameValidator
         arguments:
