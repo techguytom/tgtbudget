@@ -28,25 +28,33 @@ class AccountController extends Controller
     /**
      * Account index page
      *
-     * @Route("/account", name="accountView")
-     * @Method("GET")
+     * @param Request $request
+     * @Route("/account", name="account")
+     * @Method({"GET", "POST"})
      *
      * @return Response
      */
-    public function AccountViewAction()
+    public function AccountViewAction(Request $request)
     {
-        $account           = new Account();
-        $form              = $this->createForm(
-            'accountCreate',
-            $account,
-            ['action' => $this->generateUrl('accountPost')]
-        );
-        $user              = $this->get('security.token_storage')
-                                  ->getToken()
-                                  ->getUser();
-        $accountRepository = $this->getDoctrine()
-                                  ->getManager()
-                                  ->getRepository('AppBundle:Account');
+        $account = new Account();
+        $form    = $this->createForm('accountCreate', $account);
+        $user    = $this->get('security.token_storage')
+                        ->getToken()
+                        ->getUser();
+        $em      = $this->getDoctrine()
+                        ->getManager();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $account->setUser($user);
+            $em->persist($account);
+            $em->flush();
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->success('Account Saved');
+        }
+
+        $accountRepository = $em->getRepository('AppBundle:Account');
         $accounts          = $accountRepository->findBy(['user' => $user->getID()]);
 
         return $this->render(
@@ -59,55 +67,33 @@ class AccountController extends Controller
     }
 
     /**
-     * Handle post action of Account Create Form
-     *
-     * @param Request $request
-     * @Route("/account", name="accountPost")
-     * @Method("POST")
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function AccountPostAction(Request $request)
-    {
-        $account = new Account();
-        $form    = $this->createForm('accountCreate', $account);
-        $user    = $this->get('security.token_storage')
-                        ->getToken()
-                        ->getUser();
-
-        $form->handleRequest($request);
-        $account->setUser($user);
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()
-                       ->getManager();
-            $em->persist($account);
-            $em->flush();
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            $flash->success('Account Saved');
-        }
-        return $this->redirectToRoute('accountView');
-
-    }
-
-    /**
      * Account Types Settings Page
      *
-     * @Route("/settings/account-types", name="accountTypesView")
-     * @Method("GET")
+     * @param Request $request
+     * @Route("/settings/account-types", name="accountTypes")
+     * @Method({"GET", "POST"})
      *
      * @return Response
      */
-    public function AccountTypesViewAction()
+    public function AccountTypesAction(Request $request)
     {
         $accountType = new AccountType();
-        $form        = $this->createForm(
-            'accountType',
-            $accountType,
-            ['action' => $this->generateUrl('accountTypesPost')]
-        );
+        $form        = $this->createForm('accountType', $accountType);
         $user        = $this->get('security.token_storage')
                             ->getToken()
                             ->getUser();
+        $em          = $this->getDoctrine()
+                            ->getManager();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $accountType->setUser($user);
+            $em->persist($accountType);
+            $em->flush();
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->success('Account Type Added');
+        }
 
         $accountTypeRepository = $this->getDoctrine()
                                       ->getManager()
@@ -122,38 +108,4 @@ class AccountController extends Controller
             )
         );
     }
-
-    /**
-     * Handles posting of Account Type form
-     *
-     * @param Request $request
-     * @Route("/settings/account-types", name="accountTypesPost")
-     * @Method("POST")
-     *
-     * @return Response
-     * TODO: Error messages not displaying
-     */
-    public function AccountTypePostAction(Request $request)
-    {
-        $accountType = new AccountType();
-        $form        = $this->createForm('accountType', $accountType);
-        $user        = $this->get('security.token_storage')
-                            ->getToken()
-                            ->getUser();
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $accountType->setUser($user);
-            $em = $this->getDoctrine()
-                       ->getManager();
-            $em->persist($accountType);
-            $em->flush();
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            $flash->success('Account Type Added');
-
-        }
-        return $this->redirectToRoute('accountTypesView');
-    }
-
 }
