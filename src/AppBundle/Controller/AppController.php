@@ -3,10 +3,11 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
- * Class AppController
+ * Handles public facing views and forms
  *
  * @package AppBundle\Controller
  */
@@ -16,19 +17,10 @@ class AppController extends Controller
      * Home Page
      *
      * @Route("/", name="homepage")
+     * @Method("GET")
      */
     public function indexAction()
     {
         return $this->render('AppBundle::index.html.twig');
-    }
-
-    /**
-     * Account Page
-     *
-     * @Route("/account", name="account")
-     */
-    public function AccountAction()
-    {
-        return $this->render('AppBundle:Account:index.html.twig');
     }
 }

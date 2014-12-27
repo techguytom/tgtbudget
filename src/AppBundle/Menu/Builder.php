@@ -40,6 +40,10 @@ class Builder
 
         $menu->addChild('Home', array('route' => 'homepage'));
         $menu->addChild('Account', array('route' => 'account'));
+        $menu->addChild('Settings', array('uri' => '#'));
+        $menu['Settings']->addChild('Account Types', array('route' => 'accountTypes'));
+//        $menu['Settings']->addChild('Billing Categories', array('route' => 'category_setup'));
+//        $menu['Settings']->addChild('General', array('route' => 'general_settings'));
 
         return $menu;
     }

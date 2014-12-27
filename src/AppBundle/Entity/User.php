@@ -29,9 +29,24 @@ class User extends BaseUser
     protected $bills;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="user")
+     */
+    protected $accounts;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Setting", mappedBy="user")
      */
     protected $settings;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountType", mappedBy="user")
+     */
+    protected $accountTypes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Category", mappedBy="user")
+     */
+    protected $categories;
 
     /**
      * construct
@@ -40,8 +55,11 @@ class User extends BaseUser
      */
     public function __construct()
     {
-        $this->bills    = new ArrayCollection();
-        $this->settings = new ArrayCollection();
+        $this->bills        = new ArrayCollection();
+        $this->settings     = new ArrayCollection();
+        $this->accounts     = new ArrayCollection();
+        $this->accountTypes = new ArrayCollection();
+        $this->categories   = new ArrayCollection();
 
         parent::__construct();
     }
@@ -49,7 +67,7 @@ class User extends BaseUser
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -57,6 +75,8 @@ class User extends BaseUser
     }
 
     /**
+     * Get Bills
+     *
      * @return bill[]|ArrayCollection
      */
     public function getBills()
@@ -65,14 +85,22 @@ class User extends BaseUser
     }
 
     /**
+     * Set Bills
+     *
      * @param bill[]|ArrayCollection $bills
+     *
+     * @return $this
      */
     public function setBills($bills)
     {
         $this->bills = $bills;
+
+        return $this;
     }
 
     /**
+     * Get Settings
+     *
      * @return setting[]|ArrayCollection
      */
     public function getSettings()
@@ -81,10 +109,88 @@ class User extends BaseUser
     }
 
     /**
+     * Set Settings
+     *
      * @param setting[]|ArrayCollection $settings
+     *
+     * @return $this
      */
     public function setSettings($settings)
     {
         $this->settings = $settings;
+
+        return $this;
+    }
+
+    /**
+     * Get Accounts
+     *
+     * @return account[]|ArrayCollection
+     */
+    public function getAccounts()
+    {
+        return $this->accounts;
+    }
+
+    /**
+     * Set Accounts
+     *
+     * @param account[]|ArrayCollection $accounts
+     *
+     * @return $this
+     */
+    public function setAccounts($accounts)
+    {
+        $this->accounts = $accounts;
+
+        return $this;
+    }
+
+    /**
+     * Get Account Types
+     *
+     * @return accountType[]|ArrayCollection
+     */
+    public function getAccountTypes()
+    {
+        return $this->accountTypes;
+    }
+
+    /**
+     * Set Account Types
+     *
+     * @param accountType[]|ArrayCollection $accountTypes
+     *
+     * @return $this
+     */
+    public function setAccountTypes($accountTypes)
+    {
+        $this->accountTypes = $accountTypes;
+
+        return $this;
+    }
+
+    /**
+     * Get Categories
+     *
+     * @return category[]|ArrayCollection
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * Set Categories
+     *
+     * @param category[]|ArrayCollection $categories
+     *
+     * @return $this
+     */
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+
+        return $this;
     }
 }

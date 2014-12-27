@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Money\Currency;
 use Money\Money;
@@ -63,6 +64,23 @@ class Bill
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="bill")
+     */
+    protected $transactions;
+
+    /**
+     * construct
+     *
+     * initialize collections and call parent
+     */
+    public function __construct()
+    {
+        $this->transactions = new ArrayCollection();
+
+    }
+
 
     /**
      * Get id
@@ -151,6 +169,8 @@ class Bill
     }
 
     /**
+     * Get Category
+     *
      * @return Category
      */
     public function getCategory()
@@ -159,14 +179,22 @@ class Bill
     }
 
     /**
+     * Set Category
+     *
      * @param Category $category
+     *
+     * @return $this
      */
     public function setCategory($category)
     {
         $this->category = $category;
+
+        return $this;
     }
 
     /**
+     * Get User
+     *
      * @return User
      */
     public function getUser()
@@ -175,10 +203,39 @@ class Bill
     }
 
     /**
+     * Set User
      * @param User $user
+     *
+     * @return $this
      */
     public function setUser($user)
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get Accounts
+     *
+     * @return transaction[]|ArrayCollection
+     */
+    public function getAccounts()
+    {
+        return $this->transactions;
+    }
+
+    /**
+     * Set Accounts
+     *
+     * @param transaction[]|ArrayCollection $transactions
+     *
+     * @return $this
+     */
+    public function setAccounts($transactions)
+    {
+        $this->transactions = $transactions;
+
+        return $this;
     }
 }

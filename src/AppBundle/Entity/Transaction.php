@@ -57,6 +57,12 @@ class Transaction
     protected $category;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Bill", inversedBy="transactions")
+     * @ORM\JoinColumn(name="bill_id", referencedColumnName="id")
+     */
+    protected $bill;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -70,6 +76,7 @@ class Transaction
      * Set date
      *
      * @param \DateTime $date
+     *
      * @return Transaction
      */
     public function setDate($date)
@@ -109,6 +116,7 @@ class Transaction
      * Set price
      *
      * @param Money $transactionAmount
+     *
      * @return Money
      */
     public function setTransactionAmount(Money $transactionAmount)
@@ -120,6 +128,8 @@ class Transaction
     }
 
     /**
+     * Get Accounts
+     *
      * @return Account
      */
     public function getAccount()
@@ -128,14 +138,22 @@ class Transaction
     }
 
     /**
+     * Set Accounts
+     *
      * @param Account $account
+     *
+     * @return $this
      */
     public function setAccount($account)
     {
         $this->account = $account;
+
+        return $this;
     }
 
     /**
+     * Get Category
+     *
      * @return Category
      */
     public function getCategory()
@@ -144,10 +162,40 @@ class Transaction
     }
 
     /**
+     * Set Category
+     *
      * @param Category $category
+     *
+     * @return $this
      */
     public function setCategory($category)
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get Bill
+     *
+     * @return Bill
+     */
+    public function getBill()
+    {
+        return $this->bill;
+    }
+
+    /**
+     * Set Bill
+     *
+     * @param Bill $bill
+     *
+     * @return $this
+     */
+    public function setBill($bill)
+    {
+        $this->bill = $bill;
+
+        return $this;
     }
 }

@@ -6,12 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Money\Currency;
 use Money\Money;
+use AppBundle\Validator\Constraints\UniqueName;
 
 /**
  * Account
  *
  * @ORM\Table(name="accounts")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\AccountRepository")
+ * @UniqueName()
  */
 class Account
 {
@@ -34,21 +36,21 @@ class Account
     /**
      * @var integer
      *
-     * @ORM\Column(name="account_number", type="integer")
+     * @ORM\Column(name="account_number", type="integer", nullable=true)
      */
     private $accountNumber;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="credit_line_amount", type="integer")
+     * @ORM\Column(name="credit_line_amount", type="integer", nullable=true)
      */
     private $creditLineAmount;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="credit_line_currency", type="string", length=64)
+     * @ORM\Column(name="credit_line_currency", type="string", length=64, nullable=true)
      */
     private $creditLineCurrency;
 
@@ -70,6 +72,12 @@ class Account
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="account")
      */
     protected $transactions;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="accounts")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AccountType", inversedBy="accounts")
@@ -102,6 +110,7 @@ class Account
      * Set name
      *
      * @param string $name
+     *
      * @return Account
      */
     public function setName($name)
@@ -125,6 +134,7 @@ class Account
      * Set accountNumber
      *
      * @param integer $accountNumber
+     *
      * @return Account
      */
     public function setAccountNumber($accountNumber)
@@ -164,6 +174,7 @@ class Account
      * Set credit line
      *
      * @param Money $creditLine
+     *
      * @return Money
      */
     public function setCreditLine(Money $creditLine)
@@ -194,6 +205,7 @@ class Account
      * Set available balance
      *
      * @param Money $availableBalance
+     *
      * @return Money
      */
     public function setAvailableBalance(Money $availableBalance)
@@ -205,6 +217,8 @@ class Account
     }
 
     /**
+     * Get Transactions
+     *
      * @return transaction[]|ArrayCollection
      */
     public function getTransactions()
@@ -213,14 +227,21 @@ class Account
     }
 
     /**
+     * Set Transactions
+     *
      * @param transaction[]|ArrayCollection $transactions
+     *
+     * @return $this
      */
     public function setTransactions($transactions)
     {
         $this->transactions = $transactions;
+        return $this;
     }
 
     /**
+     * Get Account Type
+     *
      * @return AccountType
      */
     public function getType()
@@ -229,10 +250,38 @@ class Account
     }
 
     /**
+     * Set Account Type
+     *
      * @param AccountType $type
+     *
+     * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * Get User
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set User
+     *
+     * @param User $user
+     *
+     * @return $this
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
 }
