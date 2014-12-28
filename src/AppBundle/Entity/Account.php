@@ -36,13 +36,6 @@ class Account
     /**
      * @var integer
      *
-     * @ORM\Column(name="account_number", type="integer", nullable=true)
-     */
-    private $accountNumber;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="credit_line_amount", type="integer", nullable=true)
      */
     private $creditLineAmount;

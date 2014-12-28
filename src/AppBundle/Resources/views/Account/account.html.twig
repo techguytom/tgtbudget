@@ -18,9 +18,6 @@
             <tr>
                 <td>
                     {{ account.name }}
-                    {% if account.accountNumber != null %}
-                        &nbsp;-&nbsp;{{ account.accountNumber }}
-                    {% endif %}
                 </td>
                 <td>{{ account.availableBalance | money_localized_format }}</td>
                 <td>

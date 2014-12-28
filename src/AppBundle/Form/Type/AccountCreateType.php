@@ -57,14 +57,6 @@ class AccountCreateType extends AbstractType
                 )
             )
             ->add(
-                'accountNumber',
-                'integer',
-                array(
-                    'label'    => 'Last 4 Digits of Account Number',
-                    'required' => false,
-                )
-            )
-            ->add(
                 'availableBalance',
                 'tbbc_money',
                 array(
