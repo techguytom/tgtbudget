@@ -6,14 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Money\Currency;
 use Money\Money;
-use AppBundle\Validator\Constraints\UniqueName;
 
 /**
  * Account
  *
  * @ORM\Table(name="accounts")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\AccountRepository")
- * @UniqueName()
  */
 class Account
 {
