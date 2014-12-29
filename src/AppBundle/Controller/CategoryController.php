@@ -52,11 +52,11 @@ class CategoryController extends Controller
             $em->flush();
             $flash = $this->get('braincrafted_bootstrap.flash');
             $flash->success('Category Added');
+            $category = new Category();
+            $form     = $this->createForm('category', $category);
         }
 
-        $categoryRepository = $this->getDoctrine()
-                                   ->getManager()
-                                   ->getRepository('AppBundle:Category');
+        $categoryRepository = $em->getRepository('AppBundle:Category');
         $categories         = $categoryRepository->findByUser($user);
 
         return $this->render(

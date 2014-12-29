@@ -47,14 +47,17 @@ class BillController extends Controller
 
         if ($form->isValid()) {
             $bill->setUser($user);
+            $bill->setPaid(false);
             $em->persist($bill);
             $em->flush();
             $flash = $this->get('braincrafted_bootstrap.flash');
             $flash->success('Bill Saved');
+            $bill = new Bill();
+            $form = $this->createForm('bill', $bill);
         }
 
         $billRepository = $em->getRepository('AppBundle:Bill');
-        $bills          = $billRepository->findBy(['user' => $user->getID()]);
+        $bills          = $billRepository->findAllUnPaidByUser($user->getID());
 
         return $this->render(
             'AppBundle:Bill:bill.html.twig',

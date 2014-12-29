@@ -52,6 +52,8 @@ class AccountController extends Controller
             $em->flush();
             $flash = $this->get('braincrafted_bootstrap.flash');
             $flash->success('Account Saved');
+            $account = new Account();
+            $form    = $this->createForm('accountCreate', $account);
         }
 
         $accountRepository = $em->getRepository('AppBundle:Account');
@@ -93,11 +95,11 @@ class AccountController extends Controller
             $em->flush();
             $flash = $this->get('braincrafted_bootstrap.flash');
             $flash->success('Account Type Added');
+            $accountType = new AccountType();
+            $form        = $this->createForm('accountType', $accountType);
         }
 
-        $accountTypeRepository = $this->getDoctrine()
-                                      ->getManager()
-                                      ->getRepository('AppBundle:AccountType');
+        $accountTypeRepository = $em->getRepository('AppBundle:AccountType');
         $accountTypes          = $accountTypeRepository->findByUser($user);
 
         return $this->render(

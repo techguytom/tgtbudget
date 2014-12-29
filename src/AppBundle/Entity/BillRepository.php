@@ -1,6 +1,6 @@
 <?php
 /**
- * AccountRepository.php
+ * BillRepository.php
  *
  * @package AppBundle\Entity
  * @subpackage
@@ -10,16 +10,15 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use AppBundle\Model\Validation;
 
 /**
- * Account Repository
+ * Bill Repository
  *
- * @package AppBundle\Entity
- * @subpackage
- * @author  Tom Jenkins <tom@techguytom.com>
+ * @package    AppBundle\Entity
+ * @subpackage Bill
+ * @author     Tom Jenkins <tom@techguytom.com>
  */
-class AccountRepository extends EntityRepository implements Validation
+class BillRepository extends EntityRepository
 {
     /**
      * Query builder for types by user
@@ -41,7 +40,7 @@ class AccountRepository extends EntityRepository implements Validation
     /**
      * Get results by user
      *
-     * @param $user
+     * @param User $user
      *
      * @return array
      */
@@ -53,16 +52,21 @@ class AccountRepository extends EntityRepository implements Validation
     }
 
     /**
-     * Find any entries that share a user and a name
+     * Get all Unpaid Bills from one user
      *
-     * @param User   $user
-     * @param string $name
+     * @param int $id User Id
      *
      * @return array
+     *
      */
-    public function findByUserAndName(User $user, $name)
+    public function findAllUnPaidByUser($id)
     {
-        return $this->findBy(['user' => $user, 'name' => $name]);
+        return $this->createQueryBuilder('b')
+                    ->orderBy('b.dueDate', 'ASC')
+                    ->where('b.paid = false')
+                    ->andWhere('b.user = :id')
+                    ->setParameter('id', $id)
+                    ->getQuery()
+                    ->getResult();
     }
-
 }

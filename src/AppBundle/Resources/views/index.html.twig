@@ -2,5 +2,82 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    Homepage.
+    <div class="row">
+        <div class="col-md-6">
+            <h1>New Payment</h1>
+            {{ form_start(transactionForm, {'style': 'horizontal'}) }}
+            {{ form_errors(transactionForm) }}
+            {{ form_row(transactionForm.date) }}
+            <hr class="half-rule">
+            {{ form_row(transactionForm.bill) }}
+            <div class="col-md-offset-3">
+                <p>- OR -</p>
+            </div>
+            {{ form_row(transactionForm.name) }}
+            {{ form_row(transactionForm.category) }}
+            <hr class="half-rule">
+            {{ form_row(transactionForm.transactionAmount) }}
+            {{ form_row(transactionForm.account) }}
+            {{ form_row(transactionForm.save) }}
+            {{ form_rest(transactionForm) }}
+            {{ form_end(transactionForm) }}
+        </div>
+        <div class="col-md-6">
+            <h1>Deposit or Transfer</h1>
+            {{ form_start(transferForm, {'style': 'horizontal'}) }}
+            {{ form_errors(transferForm) }}
+            {{ form_row(transferForm.date) }}
+            {{ form_row(transferForm.transactionAmount) }}
+            {{ form_row(transferForm.toAccount) }}
+            <hr class="half-rule">
+            {{ form_row(transferForm.fromAccount) }}
+            {{ form_row(transferForm.save) }}
+            {{ form_rest(transferForm) }}
+            {{ form_end(transferForm) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Balances</h2>
+            <table class="table table-striped table-bordered table-responsive">
+                <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Available Balance</th>
+                    </tr>
+                </thead>
+                {% for account in accounts %}
+                    <tr>
+                        <td>
+                            {{ account.name }}
+                        </td>
+                        <td>{{ account.availableBalance | money_localized_format }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h2>Upcoming Bills</h2>
+            <table class="table table-striped table-bordered table-responsive">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Bill</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                {% for bill in bills %}
+                    <tr>
+                        <td>
+                            {{ bill.dueDate | date('m/d/Y') }}
+                        </td>
+                        <td>
+                            {{ bill.name }}
+                        </td>
+                        <td>{{ bill.budgetAmount | money_localized_format }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
 {% endblock %}
