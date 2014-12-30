@@ -143,4 +143,3 @@ if hash_key_equals($mariadb_values, 'install', 1) {
     }
   }
 }
-

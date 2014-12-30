@@ -88,4 +88,3 @@ define sqlite_db (
     }
   }
 }
-
