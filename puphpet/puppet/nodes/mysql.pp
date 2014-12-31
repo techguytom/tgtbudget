@@ -108,4 +108,3 @@ if hash_key_equals($mysql_values, 'install', 1) {
     }
   }
 }
-

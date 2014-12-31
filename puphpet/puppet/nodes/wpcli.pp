@@ -42,4 +42,3 @@ if hash_key_equals($wpcli_values, 'install', 1) {
     }
   }
 }
-

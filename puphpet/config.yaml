@@ -10,7 +10,7 @@ vagrantfile-local:
         network:
             private_network: 192.168.56.107
             forwarded_port:
-                YRpeEV9Ydvlk:
+                AwfCv8QB6D3B:
                     host: '9773'
                     guest: '22'
         post_up_message: ''
@@ -32,7 +32,7 @@ vagrantfile-local:
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
                     - '--parser future'
         synced_folder:
-            5KmqRaltsdIf:
+            Sw8DZQhaAAJk:
                 owner: www-data
                 group: www-data
                 source: ./
@@ -65,6 +65,14 @@ server:
     install: '1'
     packages:
         - vim
+        - curl
+users_groups:
+    install: '1'
+    groups: {  }
+    users: {  }
+cron:
+    install: '1'
+    jobs: {  }
 firewall:
     install: '1'
     rules: null
@@ -80,7 +88,7 @@ apache:
     modules:
         - rewrite
     vhosts:
-        HoG9AO6M7uAe:
+        lvtoex9xy2pv:
             servername: tgtbudget.dev
             serveraliases:
                 - www.tgtbudget.dev
@@ -88,12 +96,20 @@ apache:
             port: '80'
             setenv:
                 - 'APP_ENV dev'
-            override:
-                - All
-            options:
-                - Indexes
-                - FollowSymLinks
-                - MultiViews
+            directories:
+                jehvhlebzwhw:
+                    provider: directory
+                    path: /var/www/web
+                    options:
+                        - Indexes
+                        - FollowSymlinks
+                        - MultiViews
+                    allow_override:
+                        - All
+                    require:
+                        - all
+                        - granted
+                    custom_fragment: ''
             engine: php
             custom_fragment: ''
             ssl_cert: ''
@@ -102,13 +118,15 @@ apache:
             ssl_certs_dir: ''
     mod_pagespeed: 0
 nginx:
-    install: 0
+    install: '0'
     settings:
         default_vhost: 1
         proxy_buffer_size: 128k
         proxy_buffers: '4 256k'
+    upstreams: {  }
     vhosts:
-        ZmSeMvVI0Ia4:
+        8p9kh4pkekda:
+            proxy: ''
             server_name: tgtbudget.dev
             server_aliases:
                 - www.tgtbudget.dev
@@ -122,6 +140,7 @@ nginx:
             envvars:
                 - 'APP_ENV dev'
             engine: php
+            client_max_body_size: 1m
             ssl_cert: ''
             ssl_key: ''
 php:
@@ -134,6 +153,9 @@ php:
             - cli
             - intl
             - mcrypt
+            - curl
+            - imagick
+            - gd
         pear: {  }
         pecl:
             - pecl_http
@@ -175,7 +197,7 @@ drush:
 ruby:
     install: '1'
     versions:
-        6B0HddNtvDnt:
+        FnOvhRC2W0O5:
             default: '1'
             version: 2.1.2
             gems:
@@ -187,7 +209,7 @@ python:
     install: '1'
     packages: {  }
     versions:
-        CfGq5p8G0wxs:
+        cc74UcT0OM0P:
             version: ''
 mysql:
     install: '1'
@@ -253,6 +275,11 @@ rabbitmq:
 elastic_search:
     install: '0'
     settings:
+        version: ''
         java_install: true
-        autoupgrade: true
+solr:
+    install: '0'
+    settings:
+        version: ''
+        port: ''
 

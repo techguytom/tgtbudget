@@ -80,7 +80,8 @@ class BillType extends AbstractType
                 'recurring',
                 'checkbox',
                 array(
-                    'label' => "Monthly Recurring Bill"
+                    'label'    => "Monthly Recurring Bill",
+                    'required' => false
                 )
             )
             ->add('save', 'submit', array('label' => 'Add'));

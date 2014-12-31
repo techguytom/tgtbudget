@@ -36,6 +36,20 @@ services:
         tags:
             - { name: form.type, alias: bill }
 
+    app.form.type.payment:
+        class: AppBundle\Form\Type\TransactionType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type, alias: transaction }
+
+    app.form.type.deposit:
+        class: AppBundle\Form\Type\DepositType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type, alias: deposit }
+
     validator.unique.unique_name_validator:
         class: AppBundle\Validator\Constraints\UniqueNameValidator
         arguments:
@@ -43,3 +57,9 @@ services:
             - "@security.token_storage"
         tags:
             - { name: validator.constraint_validator, alias: unique_name_validator }
+
+    app.transaction.listener:
+        class: AppBundle\EventListener\TransactionProcessingListener
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+

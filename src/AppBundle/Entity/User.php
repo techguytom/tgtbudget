@@ -49,6 +49,11 @@ class User extends BaseUser
     protected $categories;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="user")
+     */
+    protected $transactions;
+
+    /**
      * construct
      *
      * initialize collections and call parent
@@ -60,6 +65,7 @@ class User extends BaseUser
         $this->accounts     = new ArrayCollection();
         $this->accountTypes = new ArrayCollection();
         $this->categories   = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
 
         parent::__construct();
     }
@@ -89,7 +95,7 @@ class User extends BaseUser
      *
      * @param bill[]|ArrayCollection $bills
      *
-     * @return $this
+     * @return User
      */
     public function setBills($bills)
     {
@@ -113,7 +119,7 @@ class User extends BaseUser
      *
      * @param setting[]|ArrayCollection $settings
      *
-     * @return $this
+     * @return User
      */
     public function setSettings($settings)
     {
@@ -137,7 +143,7 @@ class User extends BaseUser
      *
      * @param account[]|ArrayCollection $accounts
      *
-     * @return $this
+     * @return User
      */
     public function setAccounts($accounts)
     {
@@ -161,7 +167,7 @@ class User extends BaseUser
      *
      * @param accountType[]|ArrayCollection $accountTypes
      *
-     * @return $this
+     * @return User
      */
     public function setAccountTypes($accountTypes)
     {
@@ -185,11 +191,35 @@ class User extends BaseUser
      *
      * @param category[]|ArrayCollection $categories
      *
-     * @return $this
+     * @return User
      */
     public function setCategories($categories)
     {
         $this->categories = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Get Transactions
+     *
+     * @return transaction[]|ArrayCollection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+    /**
+     * Set Transactions
+     *
+     * @param transaction[]|ArrayCollection $transactions
+     *
+     * @return User
+     */
+    public function setTransactions($transactions)
+    {
+        $this->transactions = $transactions;
 
         return $this;
     }

@@ -1,0 +1,19 @@
+# Transaction Form
+transaction:
+    form:
+        date: Date
+        bill: Bill
+        name: Payee
+        category: Category
+        amount: Amount
+        account: Account
+        save: Save
+
+# Transfer Form
+transfer:
+    form:
+        date: Date
+        amount: Amount
+        toaccount: To Account
+        fromaccount: From Account
+        save: Save

@@ -24,6 +24,13 @@ class Transaction
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", nullable=true)
+     */
+    private $name;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="date")
@@ -63,6 +70,22 @@ class Transaction
     protected $bill;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="transactions")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
+     * Constructor
+     *
+     * Set default date to today's date
+     */
+    public function __construct()
+    {
+        $this->setDate(new \DateTime());
+    }
+
+    /**
      * Get id
      *
      * @return integer 
@@ -70,6 +93,30 @@ class Transaction
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get Name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set Name
+     *
+     * @param string $name
+     *
+     * @return Transaction
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -142,7 +189,7 @@ class Transaction
      *
      * @param Account $account
      *
-     * @return $this
+     * @return Transaction
      */
     public function setAccount($account)
     {
@@ -166,7 +213,7 @@ class Transaction
      *
      * @param Category $category
      *
-     * @return $this
+     * @return Transaction
      */
     public function setCategory($category)
     {
@@ -190,11 +237,35 @@ class Transaction
      *
      * @param Bill $bill
      *
-     * @return $this
+     * @return Transaction
      */
     public function setBill($bill)
     {
         $this->bill = $bill;
+
+        return $this;
+    }
+
+    /**
+     * Get User
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set User
+     *
+     * @param User $user
+     *
+     * @return Transaction
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
 
         return $this;
     }

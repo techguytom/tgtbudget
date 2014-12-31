@@ -11,7 +11,7 @@ use Money\Money;
  * Bill
  *
  * @ORM\Table(name="bills")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\BillRepository")
  */
 class Bill
 {
@@ -61,6 +61,13 @@ class Bill
     private $recurring;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="paid", type="boolean")
+     */
+    private $paid;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="bills")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
@@ -85,6 +92,7 @@ class Bill
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
+        $this->setDueDate(new \DateTime());
 
     }
 
@@ -156,7 +164,7 @@ class Bill
     /**
      * Get due date
      *
-     * @return integer
+     * @return \DateTime
      */
     public function getDueDate()
     {
@@ -166,7 +174,7 @@ class Bill
     /**
      * Set due date
      *
-     * @param integer $dueDate
+     * @param \DateTime $dueDate
      *
      * @return Bill
      */
@@ -178,11 +186,11 @@ class Bill
     }
 
     /**
-     * Get recurring
+     * is recurring
      *
      * @return boolean
      */
-    public function getRecurring()
+    public function isRecurring()
     {
         return $this->recurring;
     }
@@ -197,6 +205,30 @@ class Bill
     public function setRecurring($recurring)
     {
         $this->recurring = $recurring;
+
+        return $this;
+    }
+
+    /**
+     * Is Paid
+     *
+     * @return boolean
+     */
+    public function isPaid()
+    {
+        return $this->paid;
+    }
+
+    /**
+     * Set Paid
+     *
+     * @param boolean $paid
+     *
+     * @return Bill
+     */
+    public function setPaid($paid)
+    {
+        $this->paid = $paid;
 
         return $this;
     }
