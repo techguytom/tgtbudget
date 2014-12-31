@@ -32,24 +32,31 @@ class AppController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $transaction     = new Transaction();
-        $transactionForm = $this->createForm('transaction', $transaction);
-        $depositForm     = $this->createForm('deposit');
-        $em              = $this->getDoctrine()
-                                ->getManager();
-        $user            = $this->get('security.token_storage')
-                                ->getToken()
-                                ->getUser();
-        $flash           = $this->get('braincrafted_bootstrap.flash');
+        $transaction       = new Transaction();
+        $transactionForm   = $this->createForm('transaction', $transaction);
+        $depositForm       = $this->createForm('deposit');
+        $em                = $this->getDoctrine()
+                                  ->getManager();
+        $user              = $this->get('security.token_storage')
+                                  ->getToken()
+                                  ->getUser();
+        $flash             = $this->get('braincrafted_bootstrap.flash');
 
         $transactionForm->handleRequest($request);
 
         if ($transaction->getName() && $transaction->getBill()) {
+            $accountRepository = $em->getRepository('AppBundle:Account');
+            $accounts          = $accountRepository->findBy(['user' => $user->getId()]);
+            $billRepository    = $em->getRepository('AppBundle:Bill');
+            $bills             = $billRepository->findAllUnPaidByUser($user->getId());
             $flash->error('You may only select a Bill or a Payee');
             return $this->render(
                 'AppBundle::index.html.twig',
                 array(
                     'transactionForm' => $transactionForm->createView(),
+                    'transferForm'    => $depositForm->createView(),
+                    'accounts'        => $accounts,
+                    'bills'           => $bills,
                 )
             );
         }
@@ -75,22 +82,21 @@ class AppController extends Controller
             $em->persist($deposit);
             $em->flush();
             $flash->success('Deposit Completed');
-// TODO: handle account balance changes throughout
             if ($data['fromAccount']) {
                 $transfer = new Transaction();
-                $transfer->setName('Transfer');
+                $transfer->setName('Withdrawl');
                 $transfer->setDate($data['date']);
                 $transfer->setAccount($data['fromAccount']);
                 $transfer->setTransactionAmount($data['transactionAmount']);
                 $transfer->setUser($user);
                 $em->persist($transfer);
                 $em->flush();
+                $flash->reset();
                 $flash->success('Transfer Completed');
             }
 
             $depositForm = $this->createForm('deposit');
         }
-
         $accountRepository = $em->getRepository('AppBundle:Account');
         $accounts          = $accountRepository->findBy(['user' => $user->getId()]);
         $billRepository    = $em->getRepository('AppBundle:Bill');

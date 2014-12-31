@@ -32,6 +32,7 @@ class BillRepository extends EntityRepository
         $query = $this->createQueryBuilder('t')
                       ->orderBy('t.name', 'ASC')
                       ->where('t.user = :id')
+                      ->andWhere('t.paid = false')
                       ->setParameter('id', $user->getId());
 
         return $query;
