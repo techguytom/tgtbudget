@@ -57,10 +57,10 @@ class AccountCreateType extends AbstractType
                 )
             )
             ->add(
-                'availableBalance',
+                'currentBalance',
                 'tbbc_money',
                 array(
-                    'label'    => 'Available Balance',
+                    'label'    => 'Current Balance',
                     'required' => true,
                 )
             )

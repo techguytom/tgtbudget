@@ -43,7 +43,7 @@
                 <thead>
                     <tr>
                         <th>Account</th>
-                        <th>Available Balance</th>
+                        <th>Current Balance</th>
                     </tr>
                 </thead>
                 {% for account in accounts %}
@@ -51,7 +51,7 @@
                         <td>
                             {{ account.name }}
                         </td>
-                        <td>{{ account.availableBalance | money_localized_format }}</td>
+                        <td>{{ account.currentBalance | money_localized_format }}</td>
                     </tr>
                 {% endfor %}
             </table>
