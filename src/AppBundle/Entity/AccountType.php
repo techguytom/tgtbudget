@@ -32,6 +32,13 @@ class AccountType
     private $name;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="credit_account", type="boolean", nullable=true)
+     */
+    private $creditAccount;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="type")
      */
     protected $accounts;
@@ -130,6 +137,30 @@ class AccountType
     public function setUser($user)
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Is Credit Account
+     *
+     * @return boolean
+     */
+    public function isCreditAccount()
+    {
+        return $this->creditAccount;
+    }
+
+    /**
+     * Set Credit Account
+     *
+     * @param boolean $creditAccount
+     *
+     * @return Category $this
+     */
+    public function setCreditAccount($creditAccount)
+    {
+        $this->creditAccount = $creditAccount;
 
         return $this;
     }

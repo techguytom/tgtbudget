@@ -74,6 +74,12 @@ class Bill
     protected $category;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account", inversedBy="bills")
+     * @ORM\JoinColumn(name="pay_to_account_id", referencedColumnName="id")
+     */
+    protected $payToAccount;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="bills")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -248,7 +254,7 @@ class Bill
      *
      * @param Category $category
      *
-     * @return $this
+     * @return Bill
      */
     public function setCategory($category)
     {
@@ -282,25 +288,25 @@ class Bill
     }
 
     /**
-     * Get Accounts
+     * Get Account
      *
-     * @return transaction[]|ArrayCollection
+     * @return Account
      */
-    public function getAccounts()
+    public function getPayToAccount()
     {
-        return $this->transactions;
+        return $this->payToAccount;
     }
 
     /**
-     * Set Accounts
+     * Set Account
      *
-     * @param transaction[]|ArrayCollection $transactions
+     * @param Account $payToAccount
      *
      * @return Bill
      */
-    public function setAccounts($transactions)
+    public function setPayToAccount($payToAccount)
     {
-        $this->transactions = $transactions;
+        $this->payToAccount = $payToAccount;
 
         return $this;
     }

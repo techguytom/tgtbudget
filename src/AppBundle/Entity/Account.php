@@ -60,6 +60,11 @@ class Account
     private $currentBalanceCurrency;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Bill", mappedBy="payToAccount")
+     */
+    protected $bills;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="account")
      */
     protected $transactions;
@@ -84,13 +89,14 @@ class Account
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
+        $this->bills        = new ArrayCollection();
     }
 
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -114,7 +120,7 @@ class Account
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -146,8 +152,9 @@ class Account
      */
     public function setCreditLine(Money $creditLine)
     {
-        $this->creditLineAmount = $creditLine->getAmount();
-        $this->creditLineCurrency = $creditLine->getCurrency()->getName();
+        $this->creditLineAmount   = $creditLine->getAmount();
+        $this->creditLineCurrency = $creditLine->getCurrency()
+                                               ->getName();
 
         return $this;
     }
@@ -177,8 +184,9 @@ class Account
      */
     public function setCurrentBalance(Money $currentBalance)
     {
-        $this->currentBalanceAmount = $currentBalance->getAmount();
-        $this->currentBalanceCurrency = $currentBalance->getCurrency()->getName();
+        $this->currentBalanceAmount   = $currentBalance->getAmount();
+        $this->currentBalanceCurrency = $currentBalance->getCurrency()
+                                                       ->getName();
 
         return $this;
     }
@@ -198,7 +206,7 @@ class Account
      *
      * @param transaction[]|ArrayCollection $transactions
      *
-     * @return $this
+     * @return Account
      */
     public function setTransactions($transactions)
     {
@@ -221,11 +229,12 @@ class Account
      *
      * @param AccountType $type
      *
-     * @return $this
+     * @return Account
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -244,11 +253,34 @@ class Account
      *
      * @param User $user
      *
-     * @return $this
+     * @return Account
      */
     public function setUser($user)
     {
         $this->user = $user;
+
         return $this;
+    }
+
+    /**
+     * Get Bills
+     *
+     * @return bill[]|ArrayCollection
+     */
+    public function getBills()
+    {
+        return $this->bills;
+    }
+
+    /**
+     * Set Bills
+     *
+     * @param bill[]|ArrayCollection $bills
+     *
+     * $return Account
+     */
+    public function setBills($bills)
+    {
+        $this->bills = $bills;
     }
 }
