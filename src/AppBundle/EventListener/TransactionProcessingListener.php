@@ -30,10 +30,10 @@ class TransactionProcessingListener
             if ($entity->getBill()) {
                 $entity->getBill()->setPaid(true);
                 $newBalance = $entity->getAccount()
-                                     ->getAvailableBalance()
+                                     ->getCurrentBalance()
                                      ->subtract($entity->getTransactionAmount());
                 $entity->getAccount()
-                       ->setAvailableBalance($newBalance);
+                       ->setCurrentBalance($newBalance);
                 $bill = $entity->getBill();
                 if ($bill->isRecurring()) {
                     $currentDueDate = $bill->getDueDate();
@@ -52,24 +52,24 @@ class TransactionProcessingListener
             }
             if ($entity->getCategory()) {
                 $newBalance = $entity->getAccount()
-                                     ->getAvailableBalance()
-                                     ->subtract($entity->getTransactionAmount());
+                                     ->getCurrentBalance()
+                                     ->add($entity->getTransactionAmount());
                 $entity->getAccount()
-                       ->setAvailableBalance($newBalance);
+                       ->setCurrentBalance($newBalance);
             }
             if ($entity->getName() === 'Deposit') {
                 $newBalance = $entity->getAccount()
-                                     ->getAvailableBalance()
+                                     ->getCurrentBalance()
                                      ->add($entity->getTransactionAmount());
                 $entity->getAccount()
-                       ->setAvailableBalance($newBalance);
+                       ->setCurrentBalance($newBalance);
             }
             if ($entity->getName() === 'Withdrawl') {
                 $newBalance = $entity->getAccount()
-                                     ->getAvailableBalance()
+                                     ->getCurrentBalance()
                                      ->subtract($entity->getTransactionAmount());
                 $entity->getAccount()
-                       ->setAvailableBalance($newBalance);
+                       ->setCurrentBalance($newBalance);
             }
         }
 

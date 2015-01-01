@@ -48,16 +48,16 @@ class Account
     /**
      * @var integer
      *
-     * @ORM\Column(name="available_balance_amount", type="integer")
+     * @ORM\Column(name="current_balance_amount", type="integer")
      */
-    private $availableBalanceAmount;
+    private $currentBalanceAmount;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="available_balance_currency", type="string", length=64)
+     * @ORM\Column(name="current_balance_currency", type="string", length=64)
      */
-    private $availableBalanceCurrency;
+    private $currentBalanceCurrency;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="account")
@@ -122,30 +122,6 @@ class Account
     }
 
     /**
-     * Set accountNumber
-     *
-     * @param integer $accountNumber
-     *
-     * @return Account
-     */
-    public function setAccountNumber($accountNumber)
-    {
-        $this->accountNumber = $accountNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get accountNumber
-     *
-     * @return integer 
-     */
-    public function getAccountNumber()
-    {
-        return $this->accountNumber;
-    }
-
-    /**
      * get Money
      *
      * @return Money
@@ -181,28 +157,28 @@ class Account
      *
      * @return Money
      */
-    public function getAvailableBalance()
+    public function getCurrentBalance()
     {
-        if (!$this->availableBalanceCurrency) {
+        if (!$this->currentBalanceCurrency) {
             return null;
         }
-        if (!$this->availableBalanceAmount) {
-            return new Money(0, new Currency($this->availableBalanceCurrency));
+        if (!$this->currentBalanceAmount) {
+            return new Money(0, new Currency($this->currentBalanceCurrency));
         }
-        return new Money($this->availableBalanceAmount, new Currency($this->availableBalanceCurrency));
+        return new Money($this->currentBalanceAmount, new Currency($this->currentBalanceCurrency));
     }
 
     /**
      * Set available balance
      *
-     * @param Money $availableBalance
+     * @param Money $currentBalance
      *
      * @return Money
      */
-    public function setAvailableBalance(Money $availableBalance)
+    public function setCurrentBalance(Money $currentBalance)
     {
-        $this->availableBalanceAmount = $availableBalance->getAmount();
-        $this->availableBalanceCurrency = $availableBalance->getCurrency()->getName();
+        $this->currentBalanceAmount = $currentBalance->getAmount();
+        $this->currentBalanceCurrency = $currentBalance->getCurrency()->getName();
 
         return $this;
     }
