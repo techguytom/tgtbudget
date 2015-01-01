@@ -36,6 +36,14 @@ class AccountTypeType extends AbstractType
                     'required' => true
                 )
             )
+            ->add(
+                'creditAccount',
+                'checkbox',
+                array(
+                    'label'    => "This a credit account",
+                    'required' => false
+                )
+            )
             ->add('save', 'submit', array('label' => 'Add'));
     }
 

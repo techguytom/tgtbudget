@@ -71,7 +71,8 @@ class Category
      * Set name
      *
      * @param string $name
-     * @return Category
+     *
+     * @return Category $this
      */
     public function setName($name)
     {
@@ -105,7 +106,7 @@ class Category
      *
      * @param transaction[]|ArrayCollection $transactions
      *
-     * @return $this
+     * @return Category
      */
     public function setTransactions($transactions)
     {
@@ -129,7 +130,7 @@ class Category
      *
      * @param transaction[]|ArrayCollection $bills
      *
-     * @return $this
+     * @return Category
      */
     public function setBills($bills)
     {
@@ -153,11 +154,12 @@ class Category
      *
      * @param User $user
      *
-     * @return $this
+     * @return Category
      */
     public function setUser($user)
     {
         $this->user = $user;
+
         return $this;
     }
 }

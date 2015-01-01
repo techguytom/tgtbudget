@@ -8,6 +8,7 @@
 
 namespace AppBundle\Form\Type;
 
+use AppBundle\Entity\AccountRepository;
 use AppBundle\Entity\CategoryRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -74,6 +75,20 @@ class BillType extends AbstractType
                 array(
                     'label'    => 'Next Monthly Due Date',
                     'required' => true
+                )
+            )
+            ->add(
+                'payToAccount',
+                'entity',
+                array(
+                    'label'         => 'Are you paying on an existing account?',
+                    'class'         => 'AppBundle\Entity\Account',
+                    'property'      => 'name',
+                    'placeholder'   => 'Select An Account...',
+                    'required'      => false,
+                    'query_builder' => function (AccountRepository $accountRepository) use ($user) {
+                        return $accountRepository->queryByUser($user);
+                    }
                 )
             )
             ->add(

@@ -48,16 +48,21 @@ class Account
     /**
      * @var integer
      *
-     * @ORM\Column(name="available_balance_amount", type="integer")
+     * @ORM\Column(name="current_balance_amount", type="integer")
      */
-    private $availableBalanceAmount;
+    private $currentBalanceAmount;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="available_balance_currency", type="string", length=64)
+     * @ORM\Column(name="current_balance_currency", type="string", length=64)
      */
-    private $availableBalanceCurrency;
+    private $currentBalanceCurrency;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Bill", mappedBy="payToAccount")
+     */
+    protected $bills;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="account")
@@ -84,13 +89,14 @@ class Account
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
+        $this->bills        = new ArrayCollection();
     }
 
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -114,35 +120,11 @@ class Account
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set accountNumber
-     *
-     * @param integer $accountNumber
-     *
-     * @return Account
-     */
-    public function setAccountNumber($accountNumber)
-    {
-        $this->accountNumber = $accountNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get accountNumber
-     *
-     * @return integer 
-     */
-    public function getAccountNumber()
-    {
-        return $this->accountNumber;
     }
 
     /**
@@ -170,8 +152,9 @@ class Account
      */
     public function setCreditLine(Money $creditLine)
     {
-        $this->creditLineAmount = $creditLine->getAmount();
-        $this->creditLineCurrency = $creditLine->getCurrency()->getName();
+        $this->creditLineAmount   = $creditLine->getAmount();
+        $this->creditLineCurrency = $creditLine->getCurrency()
+                                               ->getName();
 
         return $this;
     }
@@ -181,28 +164,29 @@ class Account
      *
      * @return Money
      */
-    public function getAvailableBalance()
+    public function getCurrentBalance()
     {
-        if (!$this->availableBalanceCurrency) {
+        if (!$this->currentBalanceCurrency) {
             return null;
         }
-        if (!$this->availableBalanceAmount) {
-            return new Money(0, new Currency($this->availableBalanceCurrency));
+        if (!$this->currentBalanceAmount) {
+            return new Money(0, new Currency($this->currentBalanceCurrency));
         }
-        return new Money($this->availableBalanceAmount, new Currency($this->availableBalanceCurrency));
+        return new Money($this->currentBalanceAmount, new Currency($this->currentBalanceCurrency));
     }
 
     /**
      * Set available balance
      *
-     * @param Money $availableBalance
+     * @param Money $currentBalance
      *
      * @return Money
      */
-    public function setAvailableBalance(Money $availableBalance)
+    public function setCurrentBalance(Money $currentBalance)
     {
-        $this->availableBalanceAmount = $availableBalance->getAmount();
-        $this->availableBalanceCurrency = $availableBalance->getCurrency()->getName();
+        $this->currentBalanceAmount   = $currentBalance->getAmount();
+        $this->currentBalanceCurrency = $currentBalance->getCurrency()
+                                                       ->getName();
 
         return $this;
     }
@@ -222,7 +206,7 @@ class Account
      *
      * @param transaction[]|ArrayCollection $transactions
      *
-     * @return $this
+     * @return Account
      */
     public function setTransactions($transactions)
     {
@@ -245,11 +229,12 @@ class Account
      *
      * @param AccountType $type
      *
-     * @return $this
+     * @return Account
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -268,11 +253,34 @@ class Account
      *
      * @param User $user
      *
-     * @return $this
+     * @return Account
      */
     public function setUser($user)
     {
         $this->user = $user;
+
         return $this;
+    }
+
+    /**
+     * Get Bills
+     *
+     * @return bill[]|ArrayCollection
+     */
+    public function getBills()
+    {
+        return $this->bills;
+    }
+
+    /**
+     * Set Bills
+     *
+     * @param bill[]|ArrayCollection $bills
+     *
+     * $return Account
+     */
+    public function setBills($bills)
+    {
+        $this->bills = $bills;
     }
 }
