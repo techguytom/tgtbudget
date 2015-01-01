@@ -1,0 +1,21 @@
+{# AppBundle\Resources\views\Category/category.html.twig #}
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h1>Category Setup</h1>
+    {{ form_start(form, {'style': 'horizontal'}) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+    <h2>Categories</h2>
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        {% for category in categories %}
+            <tr>
+                <td>{{ category.name }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

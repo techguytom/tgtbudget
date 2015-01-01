@@ -1,0 +1,65 @@
+services:
+    app.menu_builder:
+        class: AppBundle\Menu\Builder
+        arguments: ["@knp_menu.factory"]
+
+    app.menu.main:
+        class: Knp\Menu\MenuItem
+        factory_service: app.menu_builder
+        factory_method: createMainMenu
+        arguments: ["@request"]
+        scope: request # needed as we have the request as a dependency here
+        tags:
+            - { name: knp_menu.menu, alias: main } # The alias is what is used to retrieve the menu
+
+    app.form.type.account:
+        class: AppBundle\Form\Type\AccountCreateType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type, alias: accountCreate }
+
+    app.form.type.accountType:
+        class: AppBundle\Form\Type\AccountTypeType
+        tags:
+            - { name: form.type, alias: accountType }
+
+    app.form.type.categoryType:
+        class: AppBundle\Form\Type\CategoryType
+        tags:
+            - { name: form.type, alias: category }
+
+    app.form.type.bill:
+        class: AppBundle\Form\Type\BillType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type, alias: bill }
+
+    app.form.type.payment:
+        class: AppBundle\Form\Type\TransactionType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type, alias: transaction }
+
+    app.form.type.deposit:
+        class: AppBundle\Form\Type\DepositType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type, alias: deposit }
+
+    validator.unique.unique_name_validator:
+        class: AppBundle\Validator\Constraints\UniqueNameValidator
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+        tags:
+            - { name: validator.constraint_validator, alias: unique_name_validator }
+
+    app.transaction.listener:
+        class: AppBundle\EventListener\TransactionProcessingListener
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+
