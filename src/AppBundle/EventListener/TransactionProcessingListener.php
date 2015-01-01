@@ -30,16 +30,28 @@ class TransactionProcessingListener
             if ($entity->getBill()) {
                 $entity->getBill()
                        ->setPaid(true);
-                $newBalance = $entity->getAccount()
-                                     ->getCurrentBalance()
-                                     ->subtract($entity->getTransactionAmount());
-                $entity->getAccount()
-                       ->setCurrentBalance($newBalance);
+                if ($entity->getAccount()
+                           ->getType()
+                           ->isCreditAccount()
+                ) {
+                    $newBalance = $entity->getAccount()
+                                         ->getCurrentBalance()
+                                         ->add($entity->getTransactionAmount());
+                    $entity->getAccount()
+                           ->setCurrentBalance($newBalance);
+
+                } else {
+                    $newBalance = $entity->getAccount()
+                                         ->getCurrentBalance()
+                                         ->subtract($entity->getTransactionAmount());
+                    $entity->getAccount()
+                           ->setCurrentBalance($newBalance);
+                }
                 $bill = $entity->getBill();
                 if ($bill->getPayToAccount()) {
                     $newBalance = $bill->getPayToAccount()
                                        ->getCurrentBalance()
-                                       ->add($entity->getTransactionAmount());
+                                       ->subtract($entity->getTransactionAmount());
                     $entity->getBill()
                            ->getPayToAccount()
                            ->setCurrentBalance($newBalance);
@@ -60,11 +72,23 @@ class TransactionProcessingListener
                 }
             }
             if ($entity->getCategory()) {
-                $newBalance = $entity->getAccount()
-                                     ->getCurrentBalance()
-                                     ->subtract($entity->getTransactionAmount());
-                $entity->getAccount()
-                       ->setCurrentBalance($newBalance);
+                if ($entity->getAccount()
+                           ->getType()
+                           ->isCreditAccount()
+                ) {
+                    $newBalance = $entity->getAccount()
+                                         ->getCurrentBalance()
+                                         ->add($entity->getTransactionAmount());
+                    $entity->getAccount()
+                           ->setCurrentBalance($newBalance);
+
+                } else {
+                    $newBalance = $entity->getAccount()
+                                         ->getCurrentBalance()
+                                         ->subtract($entity->getTransactionAmount());
+                    $entity->getAccount()
+                           ->setCurrentBalance($newBalance);
+                }
             }
             if ($entity->getName() === 'Deposit') {
                 if ($entity->getAccount()
