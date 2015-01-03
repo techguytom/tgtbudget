@@ -43,7 +43,7 @@
                 <thead>
                     <tr>
                         <th>Account</th>
-                        <th>Current Balance</th>
+                        <th>Available Balance</th>
                     </tr>
                 </thead>
                 {% for account in accounts %}
@@ -51,7 +51,7 @@
                         <td>
                             {{ account.name }}
                         </td>
-                        <td>{{ account.currentBalance | money_localized_format }}</td>
+                        <td>{{ account.getAvailableBalance|money_localized_format }}</td>
                     </tr>
                 {% endfor %}
             </table>
@@ -69,12 +69,12 @@
                 {% for bill in bills %}
                     <tr>
                         <td>
-                            {{ bill.dueDate | date('m/d/Y') }}
+                            {{ bill.dueDate|date('m/d/Y') }}
                         </td>
                         <td>
                             {{ bill.name }}
                         </td>
-                        <td>{{ bill.budgetAmount | money_localized_format }}</td>
+                        <td>{{ bill.budgetAmount|money_localized_format }}</td>
                     </tr>
                 {% endfor %}
             </table>

@@ -283,4 +283,35 @@ class Account
     {
         $this->bills = $bills;
     }
+
+    /**
+     * Calculate available balance and return
+     *
+     * @return Money
+     */
+    public function getAvailableBalance()
+    {
+        if ($this->getType()
+                 ->isCreditAccount()
+        ) {
+            return $this->getCreditLine()
+                        ->subtract($this->getCurrentBalance());
+        } else {
+            return $this->getCurrentBalance();
+        }
+    }
+
+    public function isAboveOptimumBalance()
+    {
+        if (!$this->getType()->isCreditAccount()) {
+            return false;
+        }
+
+        $optimumAmount = $this->getCreditLine()->getAmount() * .3;
+        if ($optimumAmount < $this->getCurrentBalance()->getAmount()) {
+            return true;
+        }
+
+        return false;
+    }
 }

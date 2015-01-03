@@ -71,4 +71,3 @@ services:
         class: AppBundle\EventListener\TransactionProcessingListener
         tags:
             - { name: doctrine.event_listener, event: prePersist }
-
