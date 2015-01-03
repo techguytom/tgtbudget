@@ -11,6 +11,7 @@ namespace AppBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Entity\AccountRepository;
 
 /**
@@ -22,11 +23,20 @@ use AppBundle\Entity\AccountRepository;
  */
 class DepositType extends AbstractType
 {
+    /**
+     * @var TokenStorage
+     */
     protected $tokenStorage;
 
-    public function __construct(TokenStorage $storage)
+    /**
+     * @var Router
+     */
+    protected $router;
+
+    public function __construct(TokenStorage $storage, Router $router)
     {
         $this->tokenStorage = $storage;
+        $this->router = $router;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -35,6 +45,7 @@ class DepositType extends AbstractType
                                    ->getUser();
 
         $builder
+            ->setAction($this->router->generate('postDeposit'))
             ->add(
                 'date',
                 'date',

@@ -40,6 +40,7 @@ services:
         class: AppBundle\Form\Type\TransactionType
         arguments:
             - "@security.token_storage"
+            - "@router"
         tags:
             - { name: form.type, alias: transaction }
 
@@ -47,6 +48,7 @@ services:
         class: AppBundle\Form\Type\DepositType
         arguments:
             - "@security.token_storage"
+            - "@router"
         tags:
             - { name: form.type, alias: deposit }
 
@@ -57,6 +59,13 @@ services:
             - "@security.token_storage"
         tags:
             - { name: validator.constraint_validator, alias: unique_name_validator }
+
+    validator.transaction.bill_or_payee_validator:
+        class: AppBundle\Validator\Constraints\BillOrPayeeValidator
+        arguments:
+            - "@braincrafted_bootstrap.flash"
+        tags:
+            - { name: validator.constraint_validator, alias: bill_or_payee_validator }
 
     app.transaction.listener:
         class: AppBundle\EventListener\TransactionProcessingListener

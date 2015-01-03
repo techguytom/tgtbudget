@@ -56,8 +56,8 @@ class AccountController extends Controller
             $form    = $this->createForm('accountCreate', $account);
         }
 
-        $accountRepository = $em->getRepository('AppBundle:Account');
-        $accounts          = $accountRepository->findBy(['user' => $user->getID()]);
+        $accounts = $em->getRepository('AppBundle:Account')
+                       ->findBy(['user' => $user->getID()]);
 
         return $this->render(
             'AppBundle:Account:account.html.twig',
@@ -99,8 +99,8 @@ class AccountController extends Controller
             $form        = $this->createForm('accountType', $accountType);
         }
 
-        $accountTypeRepository = $em->getRepository('AppBundle:AccountType');
-        $accountTypes          = $accountTypeRepository->findByUser($user);
+        $accountTypes = $em->getRepository('AppBundle:AccountType')
+                           ->findByUser($user);
 
         return $this->render(
             'AppBundle:Account:type.html.twig',
