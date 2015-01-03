@@ -56,8 +56,8 @@ class BillController extends Controller
             $form = $this->createForm('bill', $bill);
         }
 
-        $billRepository = $em->getRepository('AppBundle:Bill');
-        $bills          = $billRepository->findAllUnPaidByUser($user->getID());
+        $bills = $em->getRepository('AppBundle:Bill')
+                             ->findAllUnPaidByUser($user->getID());
 
         return $this->render(
             'AppBundle:Bill:bill.html.twig',

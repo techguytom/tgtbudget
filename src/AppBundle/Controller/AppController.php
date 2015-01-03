@@ -24,42 +24,59 @@ class AppController extends Controller
     /**
      * Home Page
      *
-     * @param Request $request
-     * @Route("/", name="homepage")
-     * @Method({"GET", "POST"})
+     * @Route("/", name="userHomepage")
+     * @Method("GET")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        $transaction       = new Transaction();
-        $transactionForm   = $this->createForm('transaction', $transaction);
-        $depositForm       = $this->createForm('deposit');
-        $em                = $this->getDoctrine()
-                                  ->getManager();
-        $user              = $this->get('security.token_storage')
-                                  ->getToken()
-                                  ->getUser();
-        $flash             = $this->get('braincrafted_bootstrap.flash');
+        $transaction     = new Transaction();
+        $transactionForm = $this->createForm('transaction', $transaction);
+        $depositForm     = $this->createForm('deposit');
+        $em              = $this->getDoctrine()
+                                ->getManager();
+        $user            = $this->get('security.token_storage')
+                                ->getToken()
+                                ->getUser();
+        $accounts        = $em->getRepository('AppBundle:Account')
+                              ->findBy(['user' => $user->getId()]);
+        $bills           = $em->getRepository('AppBundle:Bill')
+                              ->findAllUnPaidByUser($user->getId());
+
+        return $this->render(
+            'AppBundle::index.html.twig',
+            array(
+                'transactionForm' => $transactionForm->createView(),
+                'transferForm'    => $depositForm->createView(),
+                'accounts'        => $accounts,
+                'bills'           => $bills,
+            )
+        );
+    }
+
+    /**
+     * Handle to Transaction form post action
+     *
+     * @Route("/", name="postTransaction")
+     * @param Request $request
+     * @Method("POST")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postTransactionAction(Request $request)
+    {
+        $transaction     = new Transaction();
+        $transactionForm = $this->createForm('transaction', $transaction);
+        $depositForm     = $this->createForm('deposit');
+        $em              = $this->getDoctrine()
+                                ->getManager();
+        $user            = $this->get('security.token_storage')
+                                ->getToken()
+                                ->getUser();
+        $flash           = $this->get('braincrafted_bootstrap.flash');
 
         $transactionForm->handleRequest($request);
-
-        if ($transaction->getName() && $transaction->getBill()) {
-            $accountRepository = $em->getRepository('AppBundle:Account');
-            $accounts          = $accountRepository->findBy(['user' => $user->getId()]);
-            $billRepository    = $em->getRepository('AppBundle:Bill');
-            $bills             = $billRepository->findAllUnPaidByUser($user->getId());
-            $flash->error('You may only select a Bill or a Payee');
-            return $this->render(
-                'AppBundle::index.html.twig',
-                array(
-                    'transactionForm' => $transactionForm->createView(),
-                    'transferForm'    => $depositForm->createView(),
-                    'accounts'        => $accounts,
-                    'bills'           => $bills,
-                )
-            );
-        }
 
         if ($transactionForm->isValid()) {
             $transaction->setUser($user);
@@ -69,38 +86,73 @@ class AppController extends Controller
             $transaction     = new Transaction();
             $transactionForm = $this->createForm('transaction', $transaction);
         }
+        $accounts = $em->getRepository('AppBundle:Account')
+                       ->findBy(['user' => $user->getId()]);
+        $bills    = $em->getRepository('AppBundle:Bill')
+                       ->findAllUnPaidByUser($user->getId());
 
-        if ($request->get('deposit')) {
-            $depositForm->handleRequest($request);
-            $data    = $depositForm->getData();
-            $deposit = new Transaction();
-            $deposit->setName('Deposit');
-            $deposit->setDate($data['date']);
-            $deposit->setAccount($data['toAccount']);
-            $deposit->setTransactionAmount($data['transactionAmount']);
-            $deposit->setUser($user);
-            $em->persist($deposit);
+        return $this->render(
+            'AppBundle::index.html.twig',
+            array(
+                'transactionForm' => $transactionForm->createView(),
+                'transferForm'    => $depositForm->createView(),
+                'accounts'        => $accounts,
+                'bills'           => $bills,
+            )
+        );
+    }
+
+    /**
+     * Handle Deposit / Transfer form
+     *
+     * @Route("/deposit", name="postDeposit")
+     * @param Request $request
+     * @Method("POST")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postDepositAction(Request $request)
+    {
+        $transaction     = new Transaction();
+        $transactionForm = $this->createForm('transaction', $transaction);
+        $depositForm     = $this->createForm('deposit');
+        $em              = $this->getDoctrine()
+                                ->getManager();
+        $user            = $this->get('security.token_storage')
+                                ->getToken()
+                                ->getUser();
+        $flash           = $this->get('braincrafted_bootstrap.flash');
+
+
+        $depositForm->handleRequest($request);
+        $data    = $depositForm->getData();
+        $deposit = new Transaction();
+        $deposit->setName('Deposit');
+        $deposit->setDate($data['date']);
+        $deposit->setAccount($data['toAccount']);
+        $deposit->setTransactionAmount($data['transactionAmount']);
+        $deposit->setUser($user);
+        $em->persist($deposit);
+        $em->flush();
+        $flash->success('Deposit Completed');
+        if ($data['fromAccount']) {
+            $transfer = new Transaction();
+            $transfer->setName('Withdrawl');
+            $transfer->setDate($data['date']);
+            $transfer->setAccount($data['fromAccount']);
+            $transfer->setTransactionAmount($data['transactionAmount']);
+            $transfer->setUser($user);
+            $em->persist($transfer);
             $em->flush();
-            $flash->success('Deposit Completed');
-            if ($data['fromAccount']) {
-                $transfer = new Transaction();
-                $transfer->setName('Withdrawl');
-                $transfer->setDate($data['date']);
-                $transfer->setAccount($data['fromAccount']);
-                $transfer->setTransactionAmount($data['transactionAmount']);
-                $transfer->setUser($user);
-                $em->persist($transfer);
-                $em->flush();
-                $flash->reset();
-                $flash->success('Transfer Completed');
-            }
-
-            $depositForm = $this->createForm('deposit');
+            $flash->reset();
+            $flash->success('Transfer Completed');
         }
-        $accountRepository = $em->getRepository('AppBundle:Account');
-        $accounts          = $accountRepository->findBy(['user' => $user->getId()]);
-        $billRepository    = $em->getRepository('AppBundle:Bill');
-        $bills             = $billRepository->findAllUnPaidByUser($user->getId());
+
+        $depositForm = $this->createForm('deposit');
+        $accounts    = $em->getRepository('AppBundle:Account')
+                          ->findBy(['user' => $user->getId()]);
+        $bills       = $em->getRepository('AppBundle:Bill')
+                          ->findAllUnPaidByUser($user->getId());
 
         return $this->render(
             'AppBundle::index.html.twig',

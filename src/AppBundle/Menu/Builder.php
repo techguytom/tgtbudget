@@ -38,7 +38,7 @@ class Builder
     {
         $menu = $this->factory->createItem('root');
 
-        $menu->addChild('Home', array('route' => 'homepage'));
+        $menu->addChild('Home', array('route' => 'userHomepage'));
         $menu->addChild('Accounts', array('route' => 'account'));
         $menu->addChild('Bills', array('route' => 'bills'));
         $menu->addChild('Settings', array('uri' => '#'));
