@@ -11,6 +11,7 @@ namespace AppBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Entity\CategoryRepository;
 use AppBundle\Entity\BillRepository;
 use AppBundle\Entity\AccountRepository;
@@ -31,11 +32,18 @@ class TransactionType extends AbstractType
     protected $tokenStorage;
 
     /**
-     * @param TokenStorage $storage
+     * @var Router
      */
-    public function __construct(TokenStorage $storage)
+    protected $router;
+
+    /**
+     * @param TokenStorage $storage
+     * @param Router       $router
+     */
+    public function __construct(TokenStorage $storage, Router $router)
     {
         $this->tokenStorage = $storage;
+        $this->router = $router;
     }
 
     /**
@@ -50,6 +58,7 @@ class TransactionType extends AbstractType
                                    ->getUser();
 
         $builder
+            ->setAction($this->router->generate('postTransaction'))
             ->add(
                 'date',
                 'date',

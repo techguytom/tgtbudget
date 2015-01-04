@@ -21,6 +21,11 @@ use AppBundle\Entity\Bill;
  */
 class TransactionProcessingListener
 {
+    /**
+     * Perform extra processing on Transactions
+     *
+     * @param LifecycleEventArgs $args
+     */
     public function prePersist(LifecycleEventArgs $args)
     {
         $entity        = $args->getEntity();
@@ -34,18 +39,10 @@ class TransactionProcessingListener
                            ->getType()
                            ->isCreditAccount()
                 ) {
-                    $newBalance = $entity->getAccount()
-                                         ->getCurrentBalance()
-                                         ->add($entity->getTransactionAmount());
-                    $entity->getAccount()
-                           ->setCurrentBalance($newBalance);
+                    $entity = $this->addBalance($entity);
 
                 } else {
-                    $newBalance = $entity->getAccount()
-                                         ->getCurrentBalance()
-                                         ->subtract($entity->getTransactionAmount());
-                    $entity->getAccount()
-                           ->setCurrentBalance($newBalance);
+                    $entity = $this->subtractBalance($entity);
                 }
                 $bill = $entity->getBill();
                 if ($bill->getPayToAccount()) {
@@ -76,18 +73,10 @@ class TransactionProcessingListener
                            ->getType()
                            ->isCreditAccount()
                 ) {
-                    $newBalance = $entity->getAccount()
-                                         ->getCurrentBalance()
-                                         ->add($entity->getTransactionAmount());
-                    $entity->getAccount()
-                           ->setCurrentBalance($newBalance);
+                    $entity = $this->addBalance($entity);
 
                 } else {
-                    $newBalance = $entity->getAccount()
-                                         ->getCurrentBalance()
-                                         ->subtract($entity->getTransactionAmount());
-                    $entity->getAccount()
-                           ->setCurrentBalance($newBalance);
+                    $entity = $this->subtractBalance($entity);
                 }
             }
             if ($entity->getName() === 'Deposit') {
@@ -95,18 +84,10 @@ class TransactionProcessingListener
                            ->getType()
                            ->isCreditAccount()
                 ) {
-                    $newBalance = $entity->getAccount()
-                                         ->getCurrentBalance()
-                                         ->subtract($entity->getTransactionAmount());
-                    $entity->getAccount()
-                           ->setCurrentBalance($newBalance);
+                    $entity = $this->subtractBalance($entity);
 
                 } else {
-                    $newBalance = $entity->getAccount()
-                                         ->getCurrentBalance()
-                                         ->add($entity->getTransactionAmount());
-                    $entity->getAccount()
-                           ->setCurrentBalance($newBalance);
+                    $entity = $this->addBalance($entity);
                 }
             }
             if ($entity->getName() === 'Withdrawl') {
@@ -114,21 +95,49 @@ class TransactionProcessingListener
                            ->getType()
                            ->isCreditAccount()
                 ) {
-                    $newBalance = $entity->getAccount()
-                                         ->getCurrentBalance()
-                                         ->add($entity->getTransactionAmount());
-                    $entity->getAccount()
-                           ->setCurrentBalance($newBalance);
+                    $entity = $this->addBalance($entity);
 
                 } else {
-                    $newBalance = $entity->getAccount()
-                                         ->getCurrentBalance()
-                                         ->subtract($entity->getTransactionAmount());
-                    $entity->getAccount()
-                           ->setCurrentBalance($newBalance);
+                    $entity = $this->subtractBalance($entity);
                 }
             }
         }
 
+    }
+
+    /**
+     * Add money to account balance
+     *
+     * @param Transaction $transaction
+     *
+     * @return Transaction
+     */
+    private function addBalance(Transaction $transaction)
+    {
+        $newBalance = $transaction->getAccount()
+                                  ->getCurrentBalance()
+                                  ->add($transaction->getTransactionAmount());
+        $transaction->getAccount()
+                    ->setCurrentBalance($newBalance);
+
+        return $transaction;
+    }
+
+    /**
+     * Subtract money from account balance
+     *
+     * @param Transaction $transaction
+     *
+     * @return Transaction
+     */
+    private function subtractBalance(Transaction $transaction)
+    {
+        $newBalance = $transaction->getAccount()
+                                  ->getCurrentBalance()
+                                  ->subtract($transaction->getTransactionAmount());
+        $transaction->getAccount()
+                    ->setCurrentBalance($newBalance);
+
+        return $transaction;
     }
 }

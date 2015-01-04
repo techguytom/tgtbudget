@@ -56,8 +56,8 @@ class CategoryController extends Controller
             $form     = $this->createForm('category', $category);
         }
 
-        $categoryRepository = $em->getRepository('AppBundle:Category');
-        $categories         = $categoryRepository->findByUser($user);
+        $categories = $em->getRepository('AppBundle:Category')
+                         ->findByUser($user);
 
         return $this->render(
             'AppBundle:Category:category.html.twig',

@@ -5,12 +5,14 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Money\Currency;
 use Money\Money;
+use AppBundle\Validator\Constraints\BillOrPayee;
 
 /**
  * Transaction
  *
  * @ORM\Table(name="transactions")
  * @ORM\Entity
+ * @BillOrPayee()
  */
 class Transaction
 {
