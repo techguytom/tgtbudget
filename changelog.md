@@ -1,5 +1,11 @@
 #Changelog
 
+##2015-01-04 V 0.4
+* Bill editing added
+* Transaction listing added
+* Display of Current Balance changed to Available Balance
+* various bug fixes
+
 ##2015-01-01 V 0.3
 * fixed bug/enhancement for treating balance changes with credit accounts
 
