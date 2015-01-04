@@ -30,6 +30,7 @@ class BillOrPayeeValidator extends ConstraintValidator
     {
         $this->flashMessage = $flashMessage;
     }
+
     /**
      * validate
      *
@@ -43,6 +44,11 @@ class BillOrPayeeValidator extends ConstraintValidator
         if ($object->getName() && $object->getBill()) {
             $this->flashMessage->info($constraint->message);
             $this->context->addViolation($constraint->message);
+        }
+
+        if (($object->getName() && !$object->getCategory()) || $object->getCategory() && !$object->getName()) {
+            $this->flashMessage->info('You must select a category and a name together');
+            $this->context->addViolation('You must select a category and a name together');
         }
     }
 
