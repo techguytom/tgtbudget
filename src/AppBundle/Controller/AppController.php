@@ -64,7 +64,7 @@ class AppController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postTransactionAction(Request $request)
+    public function createTransactionAction(Request $request)
     {
         $transaction     = new Transaction();
         $transactionForm = $this->createForm('transaction', $transaction);
@@ -111,7 +111,7 @@ class AppController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postDepositAction(Request $request)
+    public function createDepositAction(Request $request)
     {
         $transaction     = new Transaction();
         $transactionForm = $this->createForm('transaction', $transaction);

@@ -12,6 +12,9 @@
                 <th>Due Date</th>
                 <th>Name</th>
                 <th>Amount</th>
+                <th>Pay To Account</th>
+                <th>Recurring</th>
+                <th>Actions</th>
             </tr>
         </thead>
         {% for bill in bills %}
@@ -19,6 +22,9 @@
                 <td>{{ bill.dueDate|date('m/d/Y') }}</td>
                 <td>{{ bill.name }}</td>
                 <td>{{ bill.budgetAmount|money_localized_format }}</td>
+                <td>{{ bill.payToAccount ? bill.payToAccount.name : 'N/A' }}</td>
+                <td>{{ bill.recurring ? 'Yes' : 'No' }}</td>
+                <td><a href="{{ path('edit_bill', {'id': bill.id}) }}" title="Edit">Edit</a></td>
             </tr>
         {% endfor %}
     </table>
