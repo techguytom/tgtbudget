@@ -47,8 +47,8 @@ monolog:
 # Assetic Configuration
 assetic:
     debug:          "%kernel.debug%"
-    use_controller: false
-    bundles:        [ ]
+    use_controller: true
+    bundles:        [ AppBundle ]
     #java: /usr/bin/java
     filters:
         less:

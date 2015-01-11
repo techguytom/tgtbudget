@@ -8,6 +8,7 @@
 
 namespace AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -24,14 +25,26 @@ class AppController extends Controller
     /**
      * Home Page
      *
-     * @Route("/", name="userHomepage")
+     * @Route("/{id}", defaults={"id": null}, requirements={"id": "\d+"}, name="userHomepage")
      * @Method("GET")
+     * @param integer $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction($id)
     {
-        $transaction     = new Transaction();
+        $transaction = new Transaction();
+        if ($id) {
+            $em = $this->getDoctrine()
+                       ->getManager();
+            if ($bill = $em->getRepository('AppBundle:Bill')
+                           ->find($id)
+            ) {
+                $transaction->setBill($bill);
+                $transaction->setTransactionAmount($bill->getBudgetAmount());
+                $transaction->setAccount($bill->getPayFromAccount());
+            }
+        }
         $transactionForm = $this->createForm('transaction', $transaction);
         $depositForm     = $this->createForm('deposit');
         $em              = $this->getDoctrine()
