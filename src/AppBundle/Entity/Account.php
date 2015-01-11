@@ -65,6 +65,11 @@ class Account
     protected $bills;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Bill", mappedBy="payFromAccount")
+     */
+    protected $autoPayBills;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="account")
      */
     protected $transactions;
@@ -285,6 +290,28 @@ class Account
     }
 
     /**
+     * Get Auto Pay Bills
+     *
+     * @return bill[]|ArrayCollection
+     */
+    public function getAutoPayBills()
+    {
+        return $this->autoPayBills;
+    }
+
+    /**
+     * Set Bills
+     *
+     * @param autoPayBill[]|ArrayCollection $autoPayBills
+     *
+     * $return Account
+     */
+    public function setAutoPayBills($autoPayBills)
+    {
+        $this->autoPayBills = $autoPayBills;
+    }
+
+    /**
      * Calculate available balance and return
      *
      * @return Money
@@ -301,6 +328,11 @@ class Account
         }
     }
 
+    /**
+     * Check if balance is above 30% of credit limit
+     *
+     * @return bool
+     */
     public function isAboveOptimumBalance()
     {
         if (!$this->getType()->isCreditAccount()) {

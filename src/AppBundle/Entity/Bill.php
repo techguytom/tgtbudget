@@ -80,6 +80,12 @@ class Bill
     protected $payToAccount;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account", inversedBy="autoPayBills")
+     * @ORM\JoinColumn(name="pay_from_account_id", referencedColumnName="id")
+     */
+    protected $payFromAccount;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="bills")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -307,6 +313,30 @@ class Bill
     public function setPayToAccount($payToAccount)
     {
         $this->payToAccount = $payToAccount;
+
+        return $this;
+    }
+
+    /**
+     * Get pay From Account
+     *
+     * @return Account
+     */
+    public function getPayFromAccount()
+    {
+        return $this->payFromAccount;
+    }
+
+    /**
+     * Set pay from Account
+     *
+     * @param Account $payFromAccount
+     *
+     * @return Bill
+     */
+    public function setPayFromAccount($payFromAccount)
+    {
+        $this->payFromAccount = $payFromAccount;
 
         return $this;
     }
