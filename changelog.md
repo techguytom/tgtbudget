@@ -1,5 +1,9 @@
 #Changelog
 
+##2015-01-11 V 0.5
+* Added Auto pay account for bills
+* Added select bill on transaction page
+
 ##2015-01-04 V 0.4
 * Bill editing added
 * Transaction listing added

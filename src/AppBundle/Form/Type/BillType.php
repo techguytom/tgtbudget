@@ -78,6 +78,20 @@ class BillType extends AbstractType
                 )
             )
             ->add(
+                'payFromAccount',
+                'entity',
+                array(
+                    'label'         => 'Select to auto pay from an existing account?',
+                    'class'         => 'AppBundle\Entity\Account',
+                    'property'      => 'name',
+                    'placeholder'   => 'Select An Account...',
+                    'required'      => false,
+                    'query_builder' => function (AccountRepository $accountRepository) use ($user) {
+                        return $accountRepository->queryByUser($user);
+                    }
+                )
+            )
+            ->add(
                 'payToAccount',
                 'entity',
                 array(

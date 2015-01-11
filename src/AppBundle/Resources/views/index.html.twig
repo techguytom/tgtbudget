@@ -64,6 +64,7 @@
                         <th>Date</th>
                         <th>Bill</th>
                         <th>Amount</th>
+                        <th>Select</th>
                     </tr>
                 </thead>
                 {% for bill in bills %}
@@ -75,9 +76,15 @@
                             {{ bill.name }}
                         </td>
                         <td>{{ bill.budgetAmount|money_localized_format }}</td>
+                        <td><a href="{{ path('userHomepage', {'id': bill.id}) }}" title="select">Select</a></td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {% javascripts '@AppBundle/Resources/views/js/*' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
