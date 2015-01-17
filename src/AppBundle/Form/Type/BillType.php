@@ -113,7 +113,7 @@ class BillType extends AbstractType
                     'required' => false
                 )
             )
-            ->add('save', 'submit', array('label' => 'Add'));
+            ->add('save', 'submit', array('label' => 'Update'));
     }
 
     public function getName()
