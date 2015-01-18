@@ -58,7 +58,7 @@ class Transaction
      *
      * @ORM\Column(name="reconciled", type="boolean", nullable=true)
      */
-    //private $reconciled;
+    private $reconciled;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account", inversedBy="transactions")

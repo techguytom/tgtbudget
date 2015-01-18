@@ -14,6 +14,7 @@
                 <th>Account</th>
                 <th>Category</th>
                 <th>Amount</th>
+                <th>Reconcile</th>
             </tr>
         </thead>
         {% for transaction in transactions %}
@@ -40,6 +41,13 @@
                 </td>
                 <td>
                     {{ transaction.transactionAmount|money_localized_format }}
+                </td>
+                <td>
+                    {% if (transaction.reconciled == false) %}
+                        {{ 'ok'|parse_icons('green') }}
+                    {% else %}
+                        not rec
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

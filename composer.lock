@@ -4,11 +4,11 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7b943dfbf4653901d1d8ac386480c9f7",
+    "hash": "f0b6ca57983085c48040d0a156184f78",
     "packages": [
         {
             "name": "braincrafted/bootstrap-bundle",
-            "version": "v2.1.0",
+            "version": "dev-master",
             "target-dir": "Braincrafted/Bundle/BootstrapBundle",
             "source": {
                 "type": "git",
@@ -2279,6 +2279,33 @@
                 "templating"
             ],
             "time": "2015-01-14 10:15:49"
+        },
+        {
+            "name": "twitter/bootstrap",
+            "version": "v2.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twbs/bootstrap.git",
+                "reference": "b4c4072679943773a7582daa63f545ba818fa627"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/b4c4072679943773a7582daa63f545ba818fa627",
+                "reference": "b4c4072679943773a7582daa63f545ba818fa627",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
+            "homepage": "http://twbs.github.com/bootstrap/",
+            "keywords": [
+                "bootstrap",
+                "css"
+            ],
+            "time": "2013-07-27 06:36:38"
         }
     ],
     "packages-dev": [
@@ -2338,6 +2365,7 @@
         "doctrine/doctrine-migrations-bundle": 20,
         "symfony/assetic-bundle": 20,
         "friendsofsymfony/user-bundle": 20,
+        "braincrafted/bootstrap-bundle": 20,
         "tbbc/money-bundle": 20
     },
     "prefer-stable": false,
