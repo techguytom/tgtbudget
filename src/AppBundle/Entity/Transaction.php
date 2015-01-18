@@ -54,6 +54,13 @@ class Transaction
     private $transactionCurrency;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="reconciled", type="boolean", nullable=true)
+     */
+    //private $reconciled;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account", inversedBy="transactions")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
      */
@@ -172,6 +179,30 @@ class Transaction
     {
         $this->transactionAmount = $transactionAmount->getAmount();
         $this->transactionCurrency = $transactionAmount->getCurrency()->getName();
+
+        return $this;
+    }
+
+    /**
+     * Is reconciled
+     *
+     * @return boolean
+     */
+    public function isReconciled()
+    {
+        return $this->reconciled;
+    }
+
+    /**
+     * Set reconciled
+     *
+     * @param boolean $reconciled
+     *
+     * @return Transaction
+     */
+    public function setReconciled($reconciled)
+    {
+        $this->reconciled = $reconciled;
 
         return $this;
     }

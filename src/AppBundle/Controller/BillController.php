@@ -102,7 +102,7 @@ class BillController extends Controller
     /**
      * Edit an existing Bill
      *
-     * @Route("/bills/{id}", name="edit_bill")
+     * @Route("/bills/{id}", name="edit_bill", requirements={"id" = "\d+"})
      * @Method({"GET", "PUT"})
      * @param Bill    $bill
      * @param Request $request
