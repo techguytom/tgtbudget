@@ -9,6 +9,8 @@
 /build/
 /vendor/
 /bin/
+/web/css/
+/web/js/
 /composer.phar
 .DS_Store
 .vagrant
