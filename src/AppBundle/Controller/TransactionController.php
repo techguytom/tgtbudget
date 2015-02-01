@@ -12,8 +12,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Account;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Handle Transaction page
@@ -37,17 +37,18 @@ class TransactionController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $user    = $this->get('security.token_storage')
-                        ->getToken()
-                        ->getUser();
-        $em      = $this->getDoctrine()
-                        ->getManager();
-        $account = new Account();
-        $form    = $this->createForm('accountFilter', $account);
+        $user          = $this->get('security.token_storage')
+                              ->getToken()
+                              ->getUser();
+        $em            = $this->getDoctrine()
+                              ->getManager();
+        $account       = new Account();
+        $filterForm    = $this->createForm('accountFilter', $account);
+        $reconcileForm = $this->createForm('accountFilter', $account, ['action' => $this->generateUrl('transaction')]);
 
-        $form->handleRequest($request);
+        $filterForm->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($filterForm->isValid()) {
             $account       = $em->getRepository('AppBundle:Account')
                                 ->findOneBy(['id' => $request->get('accountFilter')]);
             $transactions  = $em->getRepository('AppBundle:Transaction')
@@ -58,32 +59,60 @@ class TransactionController extends Controller
                                     ],
                                     ['date' => 'DESC']
                                 );
-            $reconcileForm = $this->createForm('reconcile', $transactions);
+            $reconcileForm = $this->createForm('accountFilter', $account);
             $flash         = $this->get('braincrafted_bootstrap.flash');
             $flash->success('Now Viewing ' . $account->getName());
         } else {
-            $transactions  = $em->getRepository('AppBundle:Transaction')
-                                ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
-            $reconcileForm = $this->createForm('reconcile', $transactions);
-        }
-
-        $reconcileForm->handleRequest($request);
-        if ($reconcileForm->isValid()) {
-            foreach ($reconcileForm->getNormData()['id'] as $transaction) {
-                $transaction->setReconciled(true);
-                $em->persist($transaction);
-            }
-            $em->flush();
-
+            $transactions = $em->getRepository('AppBundle:Transaction')
+                               ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
         }
 
         return $this->render(
             'AppBundle:Transaction:transaction.html.twig',
             array(
-                'form'          => $form->createView(),
+                'filterForm'    => $filterForm->createView(),
                 'reconcileForm' => $reconcileForm->createView(),
                 'transactions'  => $transactions,
             )
         );
+    }
+
+    /**
+     * Reconcile Transactions
+     *
+     * @Method("POST")
+     * @ParamConverter("account", class="AppBundle:Account")
+     * @param Account $account
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function reconcileAction(Account $account, Request $request)
+    {
+        $em = $this->getDoctrine()
+                   ->getManager();
+
+        $transactions = $em->getRepository('AppBundle:Transaction')
+                           ->findBy(['account' => $account], ['date' => 'DESC']);
+
+        $form = $this->createForm('reconcile', $transactions);
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            foreach ($form->getNormData()['id'] as $transaction) {
+                $transaction->setReconciled(true);
+                $em->persist($transaction);
+            }
+            $em->flush();
+        }
+
+        return $this->render(
+            'AppBundle:Transaction:transaction.html.twig',
+            array(
+                'form'         => $form->createView(),
+                'transactions' => $transactions,
+            )
+        );
+
     }
 }
