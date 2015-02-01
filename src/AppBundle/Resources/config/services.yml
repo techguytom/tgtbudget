@@ -61,6 +61,11 @@ services:
         tags:
             - { name: form.type, alias: accountFilter }
 
+    app.form.type.reconcile:
+        class: AppBundle\Form\Type\ReconcileType
+        tags:
+            - { name: form.type, alias: reconcile }
+
     # Validators
     validator.unique.unique_name_validator:
         class: AppBundle\Validator\Constraints\UniqueNameValidator
