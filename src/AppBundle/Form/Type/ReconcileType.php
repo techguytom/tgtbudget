@@ -10,6 +10,7 @@ namespace AppBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Form for reconciling transactions
@@ -30,18 +31,31 @@ class ReconcileType extends AbstractType
     {
         $builder
             ->add(
-                'reconcile',
+                'reconciled',
                 'entity',
                 [
-                    'required'      => false,
-                    'class'         => 'AppBundle:Transaction',
-                    'property'      => 'id',
-                    'property_path' => '[id]',
-                    'multiple'      => true,
-                    'expanded'      => true,
+                    'class'    => 'AppBundle:Transaction',
+                    'property' => 'id',
+                    'expanded' => true,
+                    'multiple' => true,
+                    'required' => false,
                 ]
             )
-            ->add('Reconcile', 'submit');
+            ->add( /*TODO Find a way to have the account id sent in the post */
+                'accountFilter',
+                'hidden'
+            )
+            ->add('reconcile', 'submit');
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array(
+                'data_class'      => null,
+                'csrf_protection' => false
+            )
+        );
     }
 
     /**

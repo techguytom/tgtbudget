@@ -44,7 +44,7 @@ class TransactionController extends Controller
                               ->getManager();
         $account       = new Account();
         $filterForm    = $this->createForm('accountFilter', $account);
-        $reconcileForm = $this->createForm('accountFilter', $account, ['action' => $this->generateUrl('transaction')]);
+        $reconcileForm = $this->createForm('accountFilter', $account, ['action' => $this->generateUrl('reconcile')]);
 
         $filterForm->handleRequest($request);
 
@@ -59,7 +59,11 @@ class TransactionController extends Controller
                                     ],
                                     ['date' => 'DESC']
                                 );
-            $reconcileForm = $this->createForm('accountFilter', $account);
+            $reconcileForm = $this->createForm(
+                'accountFilter',
+                $account,
+                ['action' => $this->generateUrl('reconcile')]
+            );
             $flash         = $this->get('braincrafted_bootstrap.flash');
             $flash->success('Now Viewing ' . $account->getName());
         } else {
@@ -80,37 +84,63 @@ class TransactionController extends Controller
     /**
      * Reconcile Transactions
      *
-     * @Method("POST")
-     * @ParamConverter("account", class="AppBundle:Account")
-     * @param Account $account
+     * @Method({"GET", "POST"})
+     * @Route("/reconcile", name="reconcile")
+     *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function reconcileAction(Account $account, Request $request)
+    public function reconcileAction(Request $request)
     {
-        $em = $this->getDoctrine()
-                   ->getManager();
+        $user        = $this->get('security.token_storage')
+                            ->getToken()
+                            ->getUser();
+        $em          = $this->getDoctrine()
+                            ->getManager();
+        $account     = $em->getRepository('AppBundle:Account')
+                          ->findOneBy(['id' => $request->get('accountFilter')]);
+        $accountForm = $this->createForm('accountFilter', $account, ['action' => $this->generateUrl('reconcile')]);
+
+        if (!$account) {
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->error('You must select an account to reconcile.');
+
+            return $this->render(
+                'AppBundle:Transaction:reconcile.html.twig',
+                array(
+                    'accountForm'   => $accountForm->createView(),
+                    'reconcileForm' => null,
+                    'transactions'  => null,
+                )
+            );
+        }
 
         $transactions = $em->getRepository('AppBundle:Transaction')
-                           ->findBy(['account' => $account], ['date' => 'DESC']);
+                           ->findBy(
+                               [
+                                   'user'    => $user->getID(),
+                                   'account' => $account
+                               ],
+                               [
+                                   'date' => 'DESC'
+                               ]
+                           );
+        $reconcileForm = $this->createForm('reconcile', $transactions);
 
-        $form = $this->createForm('reconcile', $transactions);
+        $reconcileForm->handleRequest($request);
 
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            foreach ($form->getNormData()['id'] as $transaction) {
-                $transaction->setReconciled(true);
-                $em->persist($transaction);
+        if ($reconcileForm->isValid()) {
+            foreach ($accountForm->getData() as $reconciled) {
             }
-            $em->flush();
         }
 
         return $this->render(
-            'AppBundle:Transaction:transaction.html.twig',
+            'AppBundle:Transaction:reconcile.html.twig',
             array(
-                'form'         => $form->createView(),
-                'transactions' => $transactions,
+                'accountForm'   => $accountForm->createView(),
+                'reconcileForm' => $reconcileForm->createView(),
+                'transactions'  => $transactions,
             )
         );
 
