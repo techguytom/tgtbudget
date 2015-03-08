@@ -77,7 +77,35 @@ class TransactionController extends Controller
         $reconcileForm->handleRequest($request);
 
         if ($reconcileForm->isValid()) {
-            $cow = 'cow';
+            $formData = $reconcileForm->getData();
+            if ($formData->getAccount()) {
+                $account       = $em->getRepository('AppBundle:Account')
+                                    ->findOneBy(['id' => $formData->getAccount()]);
+                $transactions  = $em->getRepository('AppBundle:Transaction')
+                                    ->findBy(
+                                        [
+                                            'user'    => $user->getID(),
+                                            'account' => $account
+                                        ],
+                                        ['date' => 'DESC']
+                                    );
+                $reconcileForm = $this->createForm(
+                    'reconcile',
+                    $transaction,
+                    ['attr' => ['account' => $account->getId()]]
+                );
+                $flash = $this->get('braincrafted_bootstrap.flash');
+                $flash->success('Now Viewing ' . $account->getName() . ' and account has been reconciled.');
+
+                return $this->render(
+                    'AppBundle:Transaction:transaction.html.twig',
+                    array(
+                        'filterForm'    => $filterForm->createView(),
+                        'reconcileForm' => $reconcileForm->createView(),
+                        'transactions'  => $transactions,
+                    )
+                );
+            }
         }
 
         $transactions = $em->getRepository('AppBundle:Transaction')
@@ -87,71 +115,6 @@ class TransactionController extends Controller
             'AppBundle:Transaction:transaction.html.twig',
             array(
                 'filterForm'    => $filterForm->createView(),
-                'reconcileForm' => $reconcileForm->createView(),
-                'transactions'  => $transactions,
-            )
-        );
-
-    }
-
-    /**
-     * Reconcile Transactions
-     *
-     * @Method({"GET", "POST"})
-     * @Route("/reconcile", name="reconcile")
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function reconcileAction(Request $request)
-    {
-        $user        = $this->get('security.token_storage')
-                            ->getToken()
-                            ->getUser();
-        $em          = $this->getDoctrine()
-                            ->getManager();
-        $account     = $em->getRepository('AppBundle:Account')
-                          ->findOneBy(['id' => $request->get('accountFilter')]);
-        $accountForm = $this->createForm('accountFilter', $account, ['action' => $this->generateUrl('reconcile')]);
-
-        if (!$account) {
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            $flash->error('You must select an account to reconcile.');
-
-            return $this->render(
-                'AppBundle:Transaction:reconcile.html.twig',
-                array(
-                    'accountForm'   => $accountForm->createView(),
-                    'reconcileForm' => null,
-                    'transactions'  => null,
-                )
-            );
-        }
-
-        $transactions  = $em->getRepository('AppBundle:Transaction')
-                            ->findBy(
-                                [
-                                    'user'    => $user->getID(),
-                                    'account' => $account
-                                ],
-                                [
-                                    'date' => 'DESC'
-                                ]
-                            );
-        $reconcileForm = $this->createForm('reconcile', $transactions);
-
-        $reconcileForm->handleRequest($request);
-
-        if ($reconcileForm->isValid()) {
-            foreach ($accountForm->getData() as $reconciled) {
-            }
-        }
-
-        return $this->render(
-            'AppBundle:Transaction:reconcile.html.twig',
-            array(
-                'accountForm'   => $accountForm->createView(),
                 'reconcileForm' => $reconcileForm->createView(),
                 'transactions'  => $transactions,
             )
