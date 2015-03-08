@@ -38,6 +38,13 @@ services:
         tags:
             - { name: form.type, alias: bill }
 
+    app.form.type.reconcile:
+        class: AppBundle\Form\Type\ReconcileType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type, alias: reconcile }
+
     app.form.type.payment:
         class: AppBundle\Form\Type\TransactionType
         arguments:

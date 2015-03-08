@@ -10,7 +10,8 @@ namespace AppBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * Form for reconciling transactions
@@ -21,6 +22,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class ReconcileType extends AbstractType
 {
+    protected $tokenStorage;
+
+    public function __construct(TokenStorage $storage)
+    {
+        $this->tokenStorage = $storage;
+    }
+
     /**
      * Builds reconcile form
      *
@@ -29,33 +37,46 @@ class ReconcileType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $user = $this->tokenStorage->getToken()
+                                   ->getUser();
+
         $builder
             ->add(
                 'reconciled',
                 'entity',
                 [
-                    'class'    => 'AppBundle:Transaction',
-                    'property' => 'id',
-                    'expanded' => true,
-                    'multiple' => true,
-                    'required' => false,
+                    'class'         => 'AppBundle:Transaction',
+                    'property'      => 'id',
+                    'expanded'      => true,
+                    'multiple'      => true,
+                    'required'      => false,
+                    'query_builder' => function (EntityRepository $er) use ($user, $options) {
+                        if ($options['attr']['account']) {
+                            return $er->createQueryBuilder('t')
+                                      ->orderBy('t.date', 'DESC')
+                                      ->where('t.user = :id', 't.account = :account')
+                                      ->setParameters(
+                                          [
+                                              'id'      => $user->getId(),
+                                              'account' => $options['attr']['account']
+                                          ]
+                                      );
+                        }
+                        return $er->createQueryBuilder('t')
+                                  ->orderBy('t.date', 'DESC')
+                                  ->where('t.user = :id')
+                                  ->setParameter('id', $user->getId());
+                    }
                 ]
             )
-            ->add( /*TODO Find a way to have the account id sent in the post */
-                'accountFilter',
-                'hidden'
+            ->add(
+                'account',
+                'hidden',
+                array(
+                    'data' => $options['attr']['account'],
+                )
             )
             ->add('reconcile', 'submit');
-    }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(
-            array(
-                'data_class'      => null,
-                'csrf_protection' => false
-            )
-        );
     }
 
     /**

@@ -10,14 +10,8 @@
             {{ form_end(filterForm) }}
             <a href="{{ path('transaction') }}" title="Clear Filter">clear filter</a>
         </div>
-        <div class="col-md-6">
-            <h3>Select an Account to Reconcile</h3>
-            {{ form_start(reconcileForm, {'style': 'inline'}) }}
-            {{ form_row(reconcileForm.type) }}
-            {{ form_row(reconcileForm.filter, { 'label': 'Reconcile' }) }}
-            {{ form_end(reconcileForm) }}
-        </div>
     </div>
+    {{ form_start(reconcileForm) }}
     <table class="table table-striped table-bordered table-responsive">
         <thead>
             <tr>
@@ -55,13 +49,15 @@
                     {{ transaction.transactionAmount|money_localized_format }}
                 </td>
                 <td>
-                    {% if (transaction.reconciled == true) %}
-                        {{ icon('check-square-o') }}
+                    {% if transaction.isReconciled %}
+                        {{ form_widget(reconcileForm.reconciled[transaction.id], {'attr': {'checked': 'checked'}}) }}
                     {% else %}
-                        {{ icon('minus-square-o') }}
+                        {{ form_widget(reconcileForm.reconciled[transaction.id]) }}
                     {% endif %}
                 </td>
             </tr>
         {% endfor %}
     </table>
+    {{ form_widget(reconcileForm.reconcile) }}
+    {{ form_end(reconcileForm) }}
 {% endblock %}

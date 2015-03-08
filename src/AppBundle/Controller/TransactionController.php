@@ -10,10 +10,10 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Entity\Account;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity\Account;
+use AppBundle\Entity\Transaction;
 
 /**
  * Handle Transaction page
@@ -43,8 +43,9 @@ class TransactionController extends Controller
         $em            = $this->getDoctrine()
                               ->getManager();
         $account       = new Account();
+        $transaction   = new Transaction();
         $filterForm    = $this->createForm('accountFilter', $account);
-        $reconcileForm = $this->createForm('accountFilter', $account, ['action' => $this->generateUrl('reconcile')]);
+        $reconcileForm = $this->createForm('reconcile', $transaction, ['attr' => ['account' => null]]);
 
         $filterForm->handleRequest($request);
 
@@ -59,17 +60,28 @@ class TransactionController extends Controller
                                     ],
                                     ['date' => 'DESC']
                                 );
-            $reconcileForm = $this->createForm(
-                'accountFilter',
-                $account,
-                ['action' => $this->generateUrl('reconcile')]
-            );
+            $reconcileForm = $this->createForm('reconcile', $transaction, ['attr' => ['account' => $account->getId()]]);
             $flash         = $this->get('braincrafted_bootstrap.flash');
             $flash->success('Now Viewing ' . $account->getName());
-        } else {
-            $transactions = $em->getRepository('AppBundle:Transaction')
-                               ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
+
+            return $this->render(
+                'AppBundle:Transaction:transaction.html.twig',
+                array(
+                    'filterForm'    => $filterForm->createView(),
+                    'reconcileForm' => $reconcileForm->createView(),
+                    'transactions'  => $transactions,
+                )
+            );
         }
+
+        $reconcileForm->handleRequest($request);
+
+        if ($reconcileForm->isValid()) {
+            $cow = 'cow';
+        }
+
+        $transactions = $em->getRepository('AppBundle:Transaction')
+                           ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
 
         return $this->render(
             'AppBundle:Transaction:transaction.html.twig',
@@ -79,6 +91,7 @@ class TransactionController extends Controller
                 'transactions'  => $transactions,
             )
         );
+
     }
 
     /**
@@ -116,16 +129,16 @@ class TransactionController extends Controller
             );
         }
 
-        $transactions = $em->getRepository('AppBundle:Transaction')
-                           ->findBy(
-                               [
-                                   'user'    => $user->getID(),
-                                   'account' => $account
-                               ],
-                               [
-                                   'date' => 'DESC'
-                               ]
-                           );
+        $transactions  = $em->getRepository('AppBundle:Transaction')
+                            ->findBy(
+                                [
+                                    'user'    => $user->getID(),
+                                    'account' => $account
+                                ],
+                                [
+                                    'date' => 'DESC'
+                                ]
+                            );
         $reconcileForm = $this->createForm('reconcile', $transactions);
 
         $reconcileForm->handleRequest($request);
