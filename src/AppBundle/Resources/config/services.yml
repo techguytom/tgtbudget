@@ -1,4 +1,5 @@
 services:
+    # Menus
     app.menu_builder:
         class: AppBundle\Menu\Builder
         arguments: ["@knp_menu.factory"]
@@ -8,10 +9,11 @@ services:
         factory_service: app.menu_builder
         factory_method: createMainMenu
         arguments: ["@request"]
-        scope: request # needed as we have the request as a dependency here
+        scope: request
         tags:
-            - { name: knp_menu.menu, alias: main } # The alias is what is used to retrieve the menu
+            - { name: knp_menu.menu, alias: main }
 
+    # Form Types
     app.form.type.account:
         class: AppBundle\Form\Type\AccountCreateType
         arguments:
@@ -36,6 +38,13 @@ services:
         tags:
             - { name: form.type, alias: bill }
 
+    app.form.type.reconcile:
+        class: AppBundle\Form\Type\ReconcileType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type, alias: reconcile }
+
     app.form.type.payment:
         class: AppBundle\Form\Type\TransactionType
         arguments:
@@ -52,6 +61,19 @@ services:
         tags:
             - { name: form.type, alias: deposit }
 
+    app.form.type.account.filter:
+        class: AppBundle\Form\Type\AccountFilterType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type, alias: accountFilter }
+
+    app.form.type.reconcile:
+        class: AppBundle\Form\Type\ReconcileType
+        tags:
+            - { name: form.type, alias: reconcile }
+
+    # Validators
     validator.unique.unique_name_validator:
         class: AppBundle\Validator\Constraints\UniqueNameValidator
         arguments:
@@ -67,7 +89,14 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: bill_or_payee_validator }
 
+    # Doctrine Listeners
     app.transaction.listener:
         class: AppBundle\EventListener\TransactionProcessingListener
         tags:
             - { name: doctrine.event_listener, event: prePersist }
+
+    # Controller Helpers
+    app.reconcile.helper:
+        class: AppBundle\DependencyInjection\Helper\ReconcileHelper
+        arguments:
+            - "@doctrine.orm.entity_manager"
