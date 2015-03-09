@@ -96,6 +96,7 @@ knp_paginator:
 # braincrafted
 braincrafted_bootstrap:
     less_filter: less
+    icon_prefix: fa
 
 # tbbc money
 tbbc_money:

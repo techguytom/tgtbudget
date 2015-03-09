@@ -38,6 +38,13 @@ services:
         tags:
             - { name: form.type, alias: bill }
 
+    app.form.type.reconcile:
+        class: AppBundle\Form\Type\ReconcileType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type, alias: reconcile }
+
     app.form.type.payment:
         class: AppBundle\Form\Type\TransactionType
         arguments:
@@ -61,6 +68,11 @@ services:
         tags:
             - { name: form.type, alias: accountFilter }
 
+    app.form.type.reconcile:
+        class: AppBundle\Form\Type\ReconcileType
+        tags:
+            - { name: form.type, alias: reconcile }
+
     # Validators
     validator.unique.unique_name_validator:
         class: AppBundle\Validator\Constraints\UniqueNameValidator
@@ -82,3 +94,9 @@ services:
         class: AppBundle\EventListener\TransactionProcessingListener
         tags:
             - { name: doctrine.event_listener, event: prePersist }
+
+    # Controller Helpers
+    app.reconcile.helper:
+        class: AppBundle\DependencyInjection\Helper\ReconcileHelper
+        arguments:
+            - "@doctrine.orm.entity_manager"

@@ -10,10 +10,10 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Entity\Account;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity\Account;
+use AppBundle\Entity\Transaction;
 
 /**
  * Handle Transaction page
@@ -37,87 +37,101 @@ class TransactionController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $user    = $this->get('security.token_storage')
-                        ->getToken()
-                        ->getUser();
-        $em      = $this->getDoctrine()
-                        ->getManager();
-        $account = new Account();
-        $form    = $this->createForm('accountFilter', $account);
+        $user          = $this->get('security.token_storage')
+                              ->getToken()
+                              ->getUser();
+        $em            = $this->getDoctrine()
+                              ->getManager();
+        $flash         = $this->get('braincrafted_bootstrap.flash');
+        $account       = new Account();
+        $filterForm    = $this->createForm('accountFilter', $account);
+        $reconcileForm = $this->createForm('reconcile', null, ['attr' => ['account' => null]]);
+        $transactions  = $em->getRepository('AppBundle:Transaction')
+                            ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
 
-        $form->handleRequest($request);
+        $filterForm->handleRequest($request);
 
-        if ($form->isValid()) {
-            $account      = $em->getRepository('AppBundle:Account')
-                               ->findOneBy(['id' => $request->get('accountFilter')]);
-            $transactions = $em->getRepository('AppBundle:Transaction')
-                               ->findBy(
-                                   [
-                                       'user'    => $user->getID(),
-                                       'account' => $account
-                                   ],
-                                   ['date' => 'DESC']
-                               );
-            $flash        = $this->get('braincrafted_bootstrap.flash');
+        if ($filterForm->isValid()) {
+            $account       = $em->getRepository('AppBundle:Account')
+                                ->findOneBy(['id' => $request->get('accountFilter')]);
+            $transactions  = $em->getRepository('AppBundle:Transaction')
+                                ->findBy(
+                                    [
+                                        'user'    => $user->getID(),
+                                        'account' => $account
+                                    ],
+                                    [
+                                        'date' => 'DESC'
+                                    ]
+                                );
+            $reconcileForm = $this->createForm(
+                'reconcile',
+                null,
+                [
+                    'attr' => [
+                        'account' => $account->getId()
+                    ]
+                ]
+            );
             $flash->success('Now Viewing ' . $account->getName());
-        } else {
-            $transactions = $em->getRepository('AppBundle:Transaction')
-                               ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
+        }
+
+        $reconcileForm->handleRequest($request);
+
+        if ($reconcileForm->isValid()) {
+            $formData = $reconcileForm->getData();
+            if ($formData['account']) {
+                $account      = $em->getRepository('AppBundle:Account')
+                                   ->findOneBy(['id' => $formData['account']]);
+                $transactions = $em->getRepository('AppBundle:Transaction')
+                                   ->findBy(
+                                       [
+                                           'user'    => $user->getID(),
+                                           'account' => $account
+                                       ],
+                                       ['date' => 'DESC']
+                                   );
+                $reconciled   = $this->get('app.reconcile.helper')
+                                     ->reconcileTransactions($formData, $transactions);
+                if ($reconciled) {
+                    $flash->success($account->getName() . ' account has been reconciled.');
+
+                } else {
+                    $flash->error("There was an error while reconciling the " . $account->getName() . " account.");
+
+                }
+                $reconcileForm = $this->createForm(
+                    'reconcile',
+                    null,
+                    [
+                        'attr' => [
+                            'account' => $account->getId()
+                        ]
+                    ]
+                );
+
+            } else {
+                $transactions = $em->getRepository('AppBundle:Transaction')
+                                   ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
+                $reconciled   = $this->get('app.reconcile.helper')
+                                     ->reconcileTransactions($formData, $transactions);
+                if ($reconciled) {
+                    $flash->success('Transactions have been reconciled.');
+
+                } else {
+                    $flash->error('There was an error while reconciling your transactions.');
+
+                }
+            }
         }
 
         return $this->render(
             'AppBundle:Transaction:transaction.html.twig',
             array(
-                'form'         => $form->createView(),
-                'transactions' => $transactions,
+                'filterForm'    => $filterForm->createView(),
+                'reconcileForm' => $reconcileForm->createView(),
+                'transactions'  => $transactions,
             )
         );
-    }
-
-    /**
-     * View single account transactions
-     *
-     * @Method("GET")
-     * @ParamConverter("account", class="AppBundle:Account")
-     * @param Account $account
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function viewByAccountAction(Account $account)
-    {
-        $user     = $this->get('security.token_storage')
-                         ->getToken()
-                         ->getUser();
-        $em       = $this->getDoctrine()
-                         ->getManager();
-        $accounts = $em->getRepository('AppBundle:Account')
-                       ->findBy(['user' => $user->getID()]);
-
-        return $this->render(
-            'AppBundle:Transaction:transaction.html.twig',
-            array(
-                'transactions' => $transactions,
-                'accounts'     => $accounts,
-            )
-        );
-    }
-
-    /**
-     * Reconcile Transactions
-     *
-     * @param $id
-     */
-    public function reconcileAction($id)
-    {
-        $user = $this->get('security . token_storage')
-                     ->getToken()
-                     ->getUser();
-        $em   = $this->getDoctrine()
-                     ->getManager();
-
-        $transactions = $em->getRepository('AppBundle:Transaction')
-                           ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
-
     }
 }

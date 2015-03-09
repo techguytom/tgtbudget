@@ -36,11 +36,12 @@
         "friendsofsymfony/user-bundle": "~2.0@dev",
         "knplabs/knp-menu-bundle": "~2.0",
         "knplabs/knp-paginator-bundle": "~2.4",
-        "braincrafted/bootstrap-bundle": "dev-master",
+        "braincrafted/bootstrap-bundle": "~2.1",
         "twitter/bootstrap": "2.3.*",
         "twbs/bootstrap": "3.0.*",
         "jquery/jquery":  "1.11.*",
-        "tbbc/money-bundle": "dev-master"
+        "tbbc/money-bundle": "dev-master",
+        "fortawesome/font-awesome": "~4.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
