@@ -47,6 +47,7 @@ class ReconcileType extends AbstractType
                 [
                     'class'         => 'AppBundle:Transaction',
                     'property'      => 'id',
+                    'property_path' => '[id]',
                     'expanded'      => true,
                     'multiple'      => true,
                     'required'      => false,

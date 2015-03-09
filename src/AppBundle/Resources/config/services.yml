@@ -94,3 +94,9 @@ services:
         class: AppBundle\EventListener\TransactionProcessingListener
         tags:
             - { name: doctrine.event_listener, event: prePersist }
+
+    # Controller Helpers
+    app.reconcile.helper:
+        class: AppBundle\DependencyInjection\Helper\ReconcileHelper
+        arguments:
+            - "@doctrine.orm.entity_manager"

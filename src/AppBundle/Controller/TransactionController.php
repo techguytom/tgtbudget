@@ -42,10 +42,12 @@ class TransactionController extends Controller
                               ->getUser();
         $em            = $this->getDoctrine()
                               ->getManager();
+        $flash         = $this->get('braincrafted_bootstrap.flash');
         $account       = new Account();
-        $transaction   = new Transaction();
         $filterForm    = $this->createForm('accountFilter', $account);
-        $reconcileForm = $this->createForm('reconcile', $transaction, ['attr' => ['account' => null]]);
+        $reconcileForm = $this->createForm('reconcile', null, ['attr' => ['account' => null]]);
+        $transactions  = $em->getRepository('AppBundle:Transaction')
+                            ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
 
         $filterForm->handleRequest($request);
 
@@ -58,58 +60,70 @@ class TransactionController extends Controller
                                         'user'    => $user->getID(),
                                         'account' => $account
                                     ],
-                                    ['date' => 'DESC']
+                                    [
+                                        'date' => 'DESC'
+                                    ]
                                 );
-            $reconcileForm = $this->createForm('reconcile', $transaction, ['attr' => ['account' => $account->getId()]]);
-            $flash         = $this->get('braincrafted_bootstrap.flash');
-            $flash->success('Now Viewing ' . $account->getName());
-
-            return $this->render(
-                'AppBundle:Transaction:transaction.html.twig',
-                array(
-                    'filterForm'    => $filterForm->createView(),
-                    'reconcileForm' => $reconcileForm->createView(),
-                    'transactions'  => $transactions,
-                )
+            $reconcileForm = $this->createForm(
+                'reconcile',
+                null,
+                [
+                    'attr' => [
+                        'account' => $account->getId()
+                    ]
+                ]
             );
+            $flash->success('Now Viewing ' . $account->getName());
         }
 
         $reconcileForm->handleRequest($request);
 
         if ($reconcileForm->isValid()) {
             $formData = $reconcileForm->getData();
-            if ($formData->getAccount()) {
-                $account       = $em->getRepository('AppBundle:Account')
-                                    ->findOneBy(['id' => $formData->getAccount()]);
-                $transactions  = $em->getRepository('AppBundle:Transaction')
-                                    ->findBy(
-                                        [
-                                            'user'    => $user->getID(),
-                                            'account' => $account
-                                        ],
-                                        ['date' => 'DESC']
-                                    );
+            if ($formData['account']) {
+                $account      = $em->getRepository('AppBundle:Account')
+                                   ->findOneBy(['id' => $formData['account']]);
+                $transactions = $em->getRepository('AppBundle:Transaction')
+                                   ->findBy(
+                                       [
+                                           'user'    => $user->getID(),
+                                           'account' => $account
+                                       ],
+                                       ['date' => 'DESC']
+                                   );
+                $reconciled   = $this->get('app.reconcile.helper')
+                                     ->reconcileTransactions($formData, $transactions);
+                if ($reconciled) {
+                    $flash->success($account->getName() . ' account has been reconciled.');
+
+                } else {
+                    $flash->error("There was an error while reconciling the " . $account->getName() . " account.");
+
+                }
                 $reconcileForm = $this->createForm(
                     'reconcile',
-                    $transaction,
-                    ['attr' => ['account' => $account->getId()]]
+                    null,
+                    [
+                        'attr' => [
+                            'account' => $account->getId()
+                        ]
+                    ]
                 );
-                $flash = $this->get('braincrafted_bootstrap.flash');
-                $flash->success('Now Viewing ' . $account->getName() . ' and account has been reconciled.');
 
-                return $this->render(
-                    'AppBundle:Transaction:transaction.html.twig',
-                    array(
-                        'filterForm'    => $filterForm->createView(),
-                        'reconcileForm' => $reconcileForm->createView(),
-                        'transactions'  => $transactions,
-                    )
-                );
+            } else {
+                $transactions = $em->getRepository('AppBundle:Transaction')
+                                   ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
+                $reconciled   = $this->get('app.reconcile.helper')
+                                     ->reconcileTransactions($formData, $transactions);
+                if ($reconciled) {
+                    $flash->success('Transactions have been reconciled.');
+
+                } else {
+                    $flash->error('There was an error while reconciling your transactions.');
+
+                }
             }
         }
-
-        $transactions = $em->getRepository('AppBundle:Transaction')
-                           ->findBy(['user' => $user->getID()], ['date' => 'DESC']);
 
         return $this->render(
             'AppBundle:Transaction:transaction.html.twig',
@@ -119,6 +133,5 @@ class TransactionController extends Controller
                 'transactions'  => $transactions,
             )
         );
-
     }
 }
