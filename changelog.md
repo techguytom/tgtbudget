@@ -1,5 +1,9 @@
 #Changelog
 
+##2015-03-08 V0.6
+* Added ability to reconcile transactions
+* Bug fixes
+
 ##2015-01-11 V 0.5
 * Added Auto pay account for bills
 * Added select bill on transaction page
