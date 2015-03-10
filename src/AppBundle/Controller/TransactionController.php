@@ -52,8 +52,8 @@ class TransactionController extends Controller
         $filterForm->handleRequest($request);
 
         if ($filterForm->isValid()) {
-            $account       = $em->getRepository('AppBundle:Account')
-                                ->findOneBy(['id' => $request->get('accountFilter')]);
+            $formData      = $filterForm->getData();
+            $account       = $formData->getType();
             $transactions  = $em->getRepository('AppBundle:Transaction')
                                 ->findBy(
                                     [
