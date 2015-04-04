@@ -60,6 +60,7 @@ class TransactionProcessingListener
                     $newBill->setUser($bill->getUser());
                     $newBill->setName($bill->getName());
                     $newBill->setPayToAccount($bill->getPayToAccount());
+                    $newBill->setPayFromAccount($bill->getPayFromAccount());
                     $newBill->setDueDate($newDueDate);
                     $newBill->setBudgetAmount($bill->getBudgetAmount());
                     $newBill->setCategory($bill->getCategory());
