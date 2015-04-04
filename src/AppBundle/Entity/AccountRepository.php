@@ -64,5 +64,4 @@ class AccountRepository extends EntityRepository implements Validation
     {
         return $this->findBy(['user' => $user, 'name' => $name]);
     }
-
 }

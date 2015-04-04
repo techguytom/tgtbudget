@@ -51,5 +51,4 @@ class BillOrPayeeValidator extends ConstraintValidator
             $this->context->addViolation('You must select a category and a name together');
         }
     }
-
 }
