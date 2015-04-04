@@ -134,5 +134,4 @@ class TransactionType extends AbstractType
     {
         return 'transaction';
     }
-
 }

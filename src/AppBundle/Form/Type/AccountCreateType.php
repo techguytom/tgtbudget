@@ -79,5 +79,4 @@ class AccountCreateType extends AbstractType
     {
         return 'accountCreate';
     }
-
 }
