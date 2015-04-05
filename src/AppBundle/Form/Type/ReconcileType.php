@@ -89,5 +89,4 @@ class ReconcileType extends AbstractType
     {
         return 'reconcile';
     }
-
 }

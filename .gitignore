@@ -16,5 +16,5 @@
 .vagrant
 .idea
 /puphpet
-Vagrantfile
 /default
+Vagrantfile

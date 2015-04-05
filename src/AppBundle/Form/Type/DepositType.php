@@ -96,5 +96,4 @@ class DepositType extends AbstractType
     {
         return 'deposit';
     }
-
 }

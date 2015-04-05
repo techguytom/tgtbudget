@@ -318,14 +318,11 @@ class Account
      */
     public function getAvailableBalance()
     {
-        if ($this->getType()
-                 ->isCreditAccount()
-        ) {
-            return $this->getCreditLine()
-                        ->subtract($this->getCurrentBalance());
-        } else {
-            return $this->getCurrentBalance();
+        if ($this->getType()->isCreditAccount()) {
+            return $this->getCreditLine()->subtract($this->getCurrentBalance());
         }
+
+        return $this->getCurrentBalance();
     }
 
     /**

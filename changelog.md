@@ -1,5 +1,8 @@
 #Changelog
 
+##2015-04-05 V0.7
+* Bug fixes
+ 
 ##2015-03-08 V0.6
 * Added ability to reconcile transactions
 * Bug fixes

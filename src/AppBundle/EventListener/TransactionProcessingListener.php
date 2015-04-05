@@ -8,9 +8,9 @@
 
 namespace AppBundle\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use AppBundle\Entity\Transaction;
 use AppBundle\Entity\Bill;
+use AppBundle\Entity\Transaction;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
  * Perform bill processing
@@ -33,8 +33,8 @@ class TransactionProcessingListener
 
         if ($entity instanceof Transaction) {
             if ($entity->getBill()) {
-                $entity->getBill()
-                       ->setPaid(true);
+                $entity->getBill()->setPaid(true);
+
                 if ($entity->getAccount()
                            ->getType()
                            ->isCreditAccount()
@@ -44,15 +44,9 @@ class TransactionProcessingListener
                 } else {
                     $entity = $this->subtractBalance($entity);
                 }
+
                 $bill = $entity->getBill();
-                if ($bill->getPayToAccount()) {
-                    $newBalance = $bill->getPayToAccount()
-                                       ->getCurrentBalance()
-                                       ->subtract($entity->getTransactionAmount());
-                    $entity->getBill()
-                           ->getPayToAccount()
-                           ->setCurrentBalance($newBalance);
-                }
+
                 if ($bill->isRecurring()) {
                     $currentDueDate = $bill->getDueDate();
                     $newDueDate     = $currentDueDate->modify('+1 month');
@@ -60,6 +54,7 @@ class TransactionProcessingListener
                     $newBill->setUser($bill->getUser());
                     $newBill->setName($bill->getName());
                     $newBill->setPayToAccount($bill->getPayToAccount());
+                    $newBill->setPayFromAccount($bill->getPayFromAccount());
                     $newBill->setDueDate($newDueDate);
                     $newBill->setBudgetAmount($bill->getBudgetAmount());
                     $newBill->setCategory($bill->getCategory());
@@ -68,6 +63,7 @@ class TransactionProcessingListener
                     $entityManager->persist($newBill);
                 }
             }
+
             if ($entity->getCategory()) {
                 if ($entity->getAccount()
                            ->getType()
@@ -78,7 +74,9 @@ class TransactionProcessingListener
                 } else {
                     $entity = $this->subtractBalance($entity);
                 }
+
             }
+
             if ($entity->getName() === 'Deposit') {
                 if ($entity->getAccount()
                            ->getType()
@@ -89,7 +87,9 @@ class TransactionProcessingListener
                 } else {
                     $entity = $this->addBalance($entity);
                 }
+
             }
+
             if ($entity->getName() === 'Withdrawl') {
                 if ($entity->getAccount()
                            ->getType()
@@ -102,7 +102,6 @@ class TransactionProcessingListener
                 }
             }
         }
-
     }
 
     /**
@@ -117,8 +116,7 @@ class TransactionProcessingListener
         $newBalance = $transaction->getAccount()
                                   ->getCurrentBalance()
                                   ->add($transaction->getTransactionAmount());
-        $transaction->getAccount()
-                    ->setCurrentBalance($newBalance);
+        $transaction->getAccount()->setCurrentBalance($newBalance);
 
         return $transaction;
     }
@@ -135,8 +133,7 @@ class TransactionProcessingListener
         $newBalance = $transaction->getAccount()
                                   ->getCurrentBalance()
                                   ->subtract($transaction->getTransactionAmount());
-        $transaction->getAccount()
-                    ->setCurrentBalance($newBalance);
+        $transaction->getAccount()->setCurrentBalance($newBalance);
 
         return $transaction;
     }

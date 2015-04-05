@@ -120,5 +120,4 @@ class BillType extends AbstractType
     {
         return 'bill';
     }
-
 }

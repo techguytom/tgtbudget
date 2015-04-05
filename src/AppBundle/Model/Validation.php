@@ -30,5 +30,4 @@ interface Validation
      * @return array
      */
     public function findByUserAndName(User $user, $name);
-
 }

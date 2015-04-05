@@ -44,7 +44,7 @@ class ReconcileHelper
      *
      * @return bool
      */
-    function reconcileTransactions(Array $data, Array $transactions)
+    public function reconcileTransactions(Array $data, Array $transactions)
     {
         $ids = [];
 
