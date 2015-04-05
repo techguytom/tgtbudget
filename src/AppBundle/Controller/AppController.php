@@ -92,8 +92,19 @@ class AppController extends Controller
         $transactionForm->handleRequest($request);
 
         if ($transactionForm->isValid()) {
+            if ($transaction->getBill()->getPayToAccount()) {
+                $paymentTransaction = new Transaction();
+                $paymentTransaction->setTransactionAmount($transaction->getTransactionAmount());
+                $paymentTransaction->setAccount($transaction->getBill()->getPayToAccount());
+                $paymentTransaction->setDate($transaction->getDate());
+                $paymentTransaction->setName("Deposit");
+                $paymentTransaction->setUser($user);
+            }
             $transaction->setUser($user);
             $em->persist($transaction);
+            if (isset($paymentTransaction)) {
+                $em->persist($paymentTransaction);
+            }
             $em->flush();
             $flash->success('Transaction Saved');
             $transaction     = new Transaction();
