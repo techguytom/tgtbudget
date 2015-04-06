@@ -6,12 +6,21 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AppControllerTest extends WebTestCase
 {
-    public function testIndex()
+    public function testIndexAction()
     {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/');
-
-        $this->assertTrue($crawler->filter('html:contains("Homepage")')->count() > 0);
+//        $client = static::createClient(
+//            [],
+//            [
+//                'PHP_AUTH_USER' => 'techguytom',
+//                'PHP_AUTH_PW'   => 'test',
+//            ]
+//        );
+//
+//        $crawler = $client->request('GET', '/');
+//
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("New Payment")')->count()
+//        );
     }
 }
