@@ -92,7 +92,7 @@ class AppController extends Controller
         $transactionForm->handleRequest($request);
 
         if ($transactionForm->isValid()) {
-            if ($transaction->getBill()->getPayToAccount()) {
+            if ($transaction->getBill() && $transaction->getBill()->getPayToAccount()) {
                 $paymentTransaction = new Transaction();
                 $paymentTransaction->setTransactionAmount($transaction->getTransactionAmount());
                 $paymentTransaction->setAccount($transaction->getBill()->getPayToAccount());
