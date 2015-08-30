@@ -12,6 +12,7 @@
                 <th>Account</th>
                 <th>Available Balance</th>
                 <th>Credit Limit</th>
+                <th>Actions</th>
             </tr>
         </thead>
         {% for account in accounts %}
@@ -31,6 +32,7 @@
                         {{ account.creditLine|money_localized_format }}
                     {% endif %}
                 </td>
+                <td><a href="{{ path('edit_account', {'id': account.id}) }}" title="Edit">Edit</a></td>
             </tr>
         {% endfor %}
     </table>

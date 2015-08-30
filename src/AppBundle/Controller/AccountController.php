@@ -8,6 +8,7 @@
 
 namespace AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -34,7 +35,7 @@ class AccountController extends Controller
      *
      * @return Response
      */
-    public function accountAction(Request $request)
+    public function indexAccountAction(Request $request)
     {
         $account = new Account();
         $form    = $this->createForm('accountCreate', $account);
@@ -54,6 +55,56 @@ class AccountController extends Controller
             $flash->success('Account Saved');
             $account = new Account();
             $form    = $this->createForm('accountCreate', $account);
+        }
+
+        $accounts = $em->getRepository('AppBundle:Account')
+                       ->findBy(['user' => $user->getID()]);
+
+        return $this->render(
+            'AppBundle:Account:account.html.twig',
+            array(
+                'accountForm' => $form->createView(),
+                'accounts'    => $accounts,
+            )
+        );
+    }
+
+    /**
+     * Edit an existing Account
+     *
+     * @Route("/account/{id}", name="edit_account", requirements={"id" = "\d+"})
+     * @Method({"GET", "PUT"})
+     * @param Account $account
+     * @param Request $request
+     * @ParamConverter("account", class="AppBundle:Account")
+     *
+     * @return Response
+     */
+    public function editAccountAction(Account $account, Request $request)
+    {
+        $user = $this->get('security.token_storage')
+                     ->getToken()
+                     ->getUser();
+
+        if ($user->getId() != $account->getUser()->getId()) {
+            return $this->redirectToRoute('account');
+        }
+
+        $form = $this->createForm(
+            'accountCreate',
+            $account,
+            ['method' => 'PUT', 'action' => $this->generateUrl('edit_account', ['id' => $account->getId()])]
+        );
+        $em   = $this->getDoctrine()
+                     ->getManager();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em->persist($account);
+            $em->flush();
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->success('Account ' . $account->getName() . ' Updated');
         }
 
         $accounts = $em->getRepository('AppBundle:Account')
