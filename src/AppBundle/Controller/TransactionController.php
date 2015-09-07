@@ -8,6 +8,7 @@
 
 namespace AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -58,10 +59,10 @@ class TransactionController extends Controller
                                 ->findBy(
                                     [
                                         'user'    => $user->getID(),
-                                        'account' => $account
+                                        'account' => $account,
                                     ],
                                     [
-                                        'date' => 'DESC'
+                                        'date' => 'DESC',
                                     ]
                                 );
             $reconcileForm = $this->createForm(
@@ -69,8 +70,8 @@ class TransactionController extends Controller
                 null,
                 [
                     'attr' => [
-                        'account' => $account->getId()
-                    ]
+                        'account' => $account->getId(),
+                    ],
                 ]
             );
             $flash->success('Now Viewing ' . $account->getName());
@@ -87,7 +88,7 @@ class TransactionController extends Controller
                                    ->findBy(
                                        [
                                            'user'    => $user->getID(),
-                                           'account' => $account
+                                           'account' => $account,
                                        ],
                                        ['date' => 'DESC']
                                    );
@@ -105,8 +106,8 @@ class TransactionController extends Controller
                     null,
                     [
                         'attr' => [
-                            'account' => $account->getId()
-                        ]
+                            'account' => $account->getId(),
+                        ],
                     ]
                 );
 
@@ -133,5 +134,55 @@ class TransactionController extends Controller
                 'transactions'  => $transactions,
             )
         );
+    }
+
+    /**
+     * Edit a Transaction
+     * @Route("/{id}", name="edit_transaction", requirements={"id" = "\d+"})
+     * @Method({"GET", "PUT"})
+     *
+     * @param Transaction $transaction
+     * @param Request     $request
+     * @ParamConverter("transaction", class="AppBundle:Transaction")
+     *
+     * @return Response
+     */
+    public function editAction(Transaction $transaction, Request $request)
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        if ($user != $transaction->getUser()) {
+            $this->redirectToRoute("transaction");
+        }
+
+        $form = $this->createForm(
+            'transaction',
+            $transaction,
+            ['method' => 'PUT', 'action' => $this->generateUrl('edit_transaction', ['id' => $transaction->getId()])]
+        );
+
+        if ($request->getMethod() == 'PUT') {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                //            $bill->setPaid(false);
+                //            $em->persist($bill);
+                //            $em->flush();
+                $flash = $this->get('braincrafted_bootstrap.flash');
+                //            $flash->success('Bill Updated');
+            }
+        }
+
+        if ($transaction->getBill()) {
+            $form->get('bill')->setData($transaction->getBill());
+        }
+
+        return $this->render(
+            'AppBundle:Transaction:edit.html.twig',
+            array(
+                'form' => $form->createView(),
+            )
+        );
+
     }
 }

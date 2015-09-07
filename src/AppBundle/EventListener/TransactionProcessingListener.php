@@ -31,75 +31,76 @@ class TransactionProcessingListener
         $entity        = $args->getEntity();
         $entityManager = $args->getEntityManager();
 
-        if ($entity instanceof Transaction) {
-            if ($entity->getBill()) {
-                $entity->getBill()->setPaid(true);
+        if (!($entity instanceof Transaction)) {
+            return;
+        }
+        if ($entity->getBill()) {
+            $entity->getBill()->setPaid(true);
 
-                if ($entity->getAccount()
-                           ->getType()
-                           ->isCreditAccount()
-                ) {
-                    $entity = $this->addBalance($entity);
+            if ($entity->getAccount()
+                       ->getType()
+                       ->isCreditAccount()
+            ) {
+                $entity = $this->addBalance($entity);
 
-                } else {
-                    $entity = $this->subtractBalance($entity);
-                }
-
-                $bill = $entity->getBill();
-
-                if ($bill->isRecurring()) {
-                    $currentDueDate = $bill->getDueDate();
-                    $newDueDate     = $currentDueDate->modify('+1 month');
-                    $newBill        = new Bill();
-                    $newBill->setUser($bill->getUser());
-                    $newBill->setName($bill->getName());
-                    $newBill->setPayToAccount($bill->getPayToAccount());
-                    $newBill->setPayFromAccount($bill->getPayFromAccount());
-                    $newBill->setDueDate($newDueDate);
-                    $newBill->setBudgetAmount($bill->getBudgetAmount());
-                    $newBill->setCategory($bill->getCategory());
-                    $newBill->setRecurring(true);
-                    $newBill->setPaid(false);
-                    $entityManager->persist($newBill);
-                }
+            } else {
+                $entity = $this->subtractBalance($entity);
             }
 
-            if ($entity->getCategory()) {
-                if ($entity->getAccount()
-                           ->getType()
-                           ->isCreditAccount()
-                ) {
-                    $entity = $this->addBalance($entity);
+            $bill = $entity->getBill();
 
-                } else {
-                    $entity = $this->subtractBalance($entity);
-                }
+            if ($bill->isRecurring()) {
+                $currentDueDate = $bill->getDueDate();
+                $newDueDate     = $currentDueDate->modify('+1 month');
+                $newBill        = new Bill();
+                $newBill->setUser($bill->getUser());
+                $newBill->setName($bill->getName());
+                $newBill->setPayToAccount($bill->getPayToAccount());
+                $newBill->setPayFromAccount($bill->getPayFromAccount());
+                $newBill->setDueDate($newDueDate);
+                $newBill->setBudgetAmount($bill->getBudgetAmount());
+                $newBill->setCategory($bill->getCategory());
+                $newBill->setRecurring(true);
+                $newBill->setPaid(false);
+                $entityManager->persist($newBill);
+            }
+        }
 
+        if ($entity->getCategory()) {
+            if ($entity->getAccount()
+                       ->getType()
+                       ->isCreditAccount()
+            ) {
+                $entity = $this->addBalance($entity);
+
+            } else {
+                $entity = $this->subtractBalance($entity);
             }
 
-            if ($entity->getName() === 'Deposit') {
-                if ($entity->getAccount()
-                           ->getType()
-                           ->isCreditAccount()
-                ) {
-                    $entity = $this->subtractBalance($entity);
+        }
 
-                } else {
-                    $entity = $this->addBalance($entity);
-                }
+        if ($entity->getName() === 'Deposit') {
+            if ($entity->getAccount()
+                       ->getType()
+                       ->isCreditAccount()
+            ) {
+                $entity = $this->subtractBalance($entity);
 
+            } else {
+                $entity = $this->addBalance($entity);
             }
 
-            if ($entity->getName() === 'Withdrawl') {
-                if ($entity->getAccount()
-                           ->getType()
-                           ->isCreditAccount()
-                ) {
-                    $entity = $this->addBalance($entity);
+        }
 
-                } else {
-                    $entity = $this->subtractBalance($entity);
-                }
+        if ($entity->getName() === 'Withdrawl') {
+            if ($entity->getAccount()
+                       ->getType()
+                       ->isCreditAccount()
+            ) {
+                $entity = $this->addBalance($entity);
+
+            } else {
+                $entity = $this->subtractBalance($entity);
             }
         }
     }

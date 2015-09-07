@@ -1,0 +1,24 @@
+{# AppBundle\Resources\views\Transaction/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <h1>Edit Transaction</h1>
+        {{ form_start(form, {'style': 'horizontal'}) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.date, { 'label': 'transaction.form.date'|trans }) }}
+        <hr class="half-rule">
+        {{ form_row(form.bill, { 'label': 'transaction.form.bill'|trans }) }}
+        <div class="col-md-offset-3">
+            <p>- OR -</p>
+        </div>
+        {{ form_row(form.name, { 'label': 'transaction.form.name'|trans }) }}
+        {{ form_row(form.category, { 'label': 'transaction.form.category'|trans }) }}
+        <hr class="half-rule">
+        {{ form_row(form.transactionAmount, { 'label': 'transaction.form.amount'|trans }) }}
+        {{ form_row(form.account, { 'label': 'transaction.form.account'|trans }) }}
+        {{ form_row(form.save, { 'label': 'transaction.form.save'|trans }) }}
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
