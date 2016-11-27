@@ -55,7 +55,7 @@ doctrine:
         auto_mapping: true
 
 doctrine_migrations:
-    dir_name: %kernel.root_dir%/../src/AppBundle/Migrations
+    dir_name: "%kernel.root_dir%/../src/AppBundle/Migrations"
     namespace: AppBundle\Migrations
     table_name: migration_versions
     name: TGT Budget Migrations
@@ -76,8 +76,8 @@ fos_user:
 
 # KNP Menu
 knp_menu:
-    twig:  # use "twig: false" to disable the Twig extension and the TwigRenderer
-        template: BraincraftedBootstrapBundle:Menu:bootstrap.html.twig
+    twig:
+        template: KnpMenuBundle::menu.html.twig
     templating: false # if true, enables the helper for PHP templates
     default_renderer: twig # The renderer to use, list is also available by default
 
@@ -93,13 +93,33 @@ knp_paginator:
         pagination: KnpPaginatorBundle:Pagination:sliding.html.twig     # sliding pagination controls template
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
-# braincrafted
-braincrafted_bootstrap:
-    less_filter: less
-    icon_prefix: fa
-
 # tbbc money
 tbbc_money:
     currencies: ["USD"]
     reference_currency: "USD"
     decimals: 2
+
+assetic:
+    debug:          '%kernel.debug%'
+    use_controller: '%kernel.debug%'
+    assets:
+        bootstrap_fonts_woff:
+            inputs:
+                - '@AppBundle/Resources/public/fonts/glyphicons-halflings-regular.woff'
+            output: fonts/glyphicons-halflings-regular.woff
+        bootstrap_fonts_woff2:
+            inputs:
+                - '@AppBundle/Resources/public/fonts/glyphicons-halflings-regular.woff2'
+            output: fonts/glyphicons-halflings-regular.woff2
+        bootstrap_fonts_ttf:
+            inputs:
+                - '@AppBundle/Resources/public/fonts/glyphicons-halflings-regular.ttf'
+            output: fonts/glyphicons-halflings-regular.ttf
+        bootstrap_fonts_svg:
+            inputs:
+                - '@AppBundle/Resources/public/fonts/glyphicons-halflings-regular.svg'
+            output: fonts/glyphicons-halflings-regular.svg
+        bootstrap_fonts_eot:
+            inputs:
+                - '@AppBundle/Resources/public/fonts/glyphicons-halflings-regular.eot'
+            output: fonts/glyphicons-halflings-regular.eot

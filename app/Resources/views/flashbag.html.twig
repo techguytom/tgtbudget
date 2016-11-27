@@ -1,0 +1,17 @@
+{# /flashbag.html.twig #}
+{% for type, messages, label, flashes in app.session.flashbag.all %}
+    {% if flashes is defined %}
+        {% for flash in flashes %}
+            <div class="alert alert-{{ label }}" role="alert">
+                {{ flash }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if messages is defined %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endfor %}
