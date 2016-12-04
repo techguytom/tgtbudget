@@ -18,10 +18,8 @@
 <body class="{% block body_classes %}{% endblock %}">
     {% include 'navigation.html.twig' %}
     {% include 'flashbag.html.twig' %}
-    <div class="container-fluid fr3-container">
-        <div class="container">
-            {% block body %}{% endblock %}
-        </div>
+    <div class="container">
+        {% block body %}{% endblock %}
     </div>
     {% include 'footer.html.twig' %}
     {% block javascripts %}
