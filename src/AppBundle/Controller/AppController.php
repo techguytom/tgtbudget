@@ -87,7 +87,6 @@ class AppController extends Controller
         $user            = $this->get('security.token_storage')
                                 ->getToken()
                                 ->getUser();
-        $flash           = $this->get('braincrafted_bootstrap.flash');
 
         $transactionForm->handleRequest($request);
 
@@ -106,7 +105,7 @@ class AppController extends Controller
                 $em->persist($paymentTransaction);
             }
             $em->flush();
-            $flash->success('Transaction Saved');
+            $this->addFlash('success', 'Transaction Saved');
             $transaction     = new Transaction();
             $transactionForm = $this->createForm('transaction', $transaction);
         }
@@ -145,7 +144,6 @@ class AppController extends Controller
         $user            = $this->get('security.token_storage')
                                 ->getToken()
                                 ->getUser();
-        $flash           = $this->get('braincrafted_bootstrap.flash');
 
 
         $depositForm->handleRequest($request);
@@ -158,7 +156,7 @@ class AppController extends Controller
         $deposit->setUser($user);
         $em->persist($deposit);
         $em->flush();
-        $flash->success('Deposit Completed');
+        $this->addFlash('success', 'Deposit Completed');
         if ($data['fromAccount']) {
             $transfer = new Transaction();
             $transfer->setName('Withdrawl');
@@ -168,8 +166,7 @@ class AppController extends Controller
             $transfer->setUser($user);
             $em->persist($transfer);
             $em->flush();
-            $flash->reset();
-            $flash->success('Transfer Completed');
+            $this->addFlash('success', 'Transfer Completed');
         }
 
         $depositForm = $this->createForm('deposit');

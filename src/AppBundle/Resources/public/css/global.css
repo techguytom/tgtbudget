@@ -7,3 +7,6 @@
 .fa-minus-square-o {
     color: red;
 }
+.form-inline select {
+    margin-right: 1%;
+}

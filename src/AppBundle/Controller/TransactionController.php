@@ -42,7 +42,6 @@ class TransactionController extends Controller
                               ->getUser();
         $em            = $this->getDoctrine()
                               ->getManager();
-        $flash         = $this->get('braincrafted_bootstrap.flash');
         $account       = new Account();
         $filterForm    = $this->createForm('accountFilter', $account);
         $reconcileForm = $this->createForm('reconcile', null, ['attr' => ['account' => null]]);
@@ -73,7 +72,7 @@ class TransactionController extends Controller
                     ]
                 ]
             );
-            $flash->success('Now Viewing ' . $account->getName());
+            $this->addFlash('success', 'Now Viewing ' . $account->getName());
         }
 
         $reconcileForm->handleRequest($request);

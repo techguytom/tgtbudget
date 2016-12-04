@@ -30,8 +30,7 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form:
-        resources:
-            - 'TbbcMoneyBundle:Form:fields.html.twig'
+        resources: ['TbbcMoneyBundle:Form:fields.html.twig', 'bootstrap_3_layout.html.twig']
 
 # Doctrine Configuration
 doctrine:
@@ -43,6 +42,8 @@ doctrine:
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
+        types:
+            money: Tbbc\MoneyBundle\Type\MoneyType
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
         #     e.g. database_path: "%kernel.root_dir%/data/data.db3"

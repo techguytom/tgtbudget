@@ -80,8 +80,7 @@ class BillController extends Controller
             $bill->setPaid(false);
             $em->persist($bill);
             $em->flush();
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            $flash->success('Bill Saved');
+            $this->addFlash('success', 'Bill Saved');
             $bill = new Bill();
             $form = $this->createForm('bill', $bill);
         }
@@ -129,8 +128,7 @@ class BillController extends Controller
             $bill->setPaid(false);
             $em->persist($bill);
             $em->flush();
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            $flash->success('Bill Updated');
+            $this->addFlash('success', 'Bill Updated');
         }
 
         $bills = $em->getRepository('AppBundle:Bill')

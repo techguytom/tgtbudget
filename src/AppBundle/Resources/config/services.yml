@@ -84,8 +84,6 @@ services:
 
     validator.transaction.bill_or_payee_validator:
         class: AppBundle\Validator\Constraints\BillOrPayeeValidator
-#        arguments:
-#            - "@braincrafted_bootstrap.flash"
         tags:
             - { name: validator.constraint_validator, alias: bill_or_payee_validator }
 

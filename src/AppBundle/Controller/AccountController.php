@@ -51,8 +51,7 @@ class AccountController extends Controller
             $account->setUser($user);
             $em->persist($account);
             $em->flush();
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            $flash->success('Account Saved');
+            $this->addFlash('success', 'Account Saved');
             $account = new Account();
             $form    = $this->createForm('accountCreate', $account);
         }
@@ -103,8 +102,7 @@ class AccountController extends Controller
         if ($form->isValid()) {
             $em->persist($account);
             $em->flush();
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            $flash->success('Account ' . $account->getName() . ' Updated');
+            $this->addFlash('success', 'Account ' . $account->getName() . ' Updated');
         }
 
         $accounts = $em->getRepository('AppBundle:Account')
@@ -144,8 +142,7 @@ class AccountController extends Controller
             $accountType->setUser($user);
             $em->persist($accountType);
             $em->flush();
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            $flash->success('Account Type Added');
+            $this->addFlash('success', 'Account Type Added');
             $accountType = new AccountType();
             $form        = $this->createForm('accountType', $accountType);
         }

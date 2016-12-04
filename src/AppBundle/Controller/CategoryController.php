@@ -50,8 +50,7 @@ class CategoryController extends Controller
             $category->setUser($user);
             $em->persist($category);
             $em->flush();
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            $flash->success('Category Added');
+            $this->addFlash('success', 'Category Added');
             $category = new Category();
             $form     = $this->createForm('category', $category);
         }

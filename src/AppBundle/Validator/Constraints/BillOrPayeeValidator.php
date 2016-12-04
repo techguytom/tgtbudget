@@ -8,7 +8,6 @@
 
 namespace AppBundle\Validator\Constraints;
 
-use Braincrafted\Bundle\BootstrapBundle\Session\FlashMessage;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -22,16 +21,6 @@ use Symfony\Component\Validator\ConstraintValidator;
 class BillOrPayeeValidator extends ConstraintValidator
 {
     /**
-     * @var FlashMessage $flashMessage
-     */
-    private $flashMessage;
-
-    public function __construct(FlashMessage $flashMessage)
-    {
-        $this->flashMessage = $flashMessage;
-    }
-
-    /**
      * validate
      *
      * @param Object     $object
@@ -42,13 +31,13 @@ class BillOrPayeeValidator extends ConstraintValidator
     public function validate($object, Constraint $constraint)
     {
         if ($object->getName() && $object->getBill()) {
-            $this->flashMessage->info($constraint->message);
-            $this->context->addViolation($constraint->message);
+            $this->context->buildViolation($constraint->message)
+                          ->addViolation($constraint->message);
         }
 
         if (($object->getName() && !$object->getCategory()) || $object->getCategory() && !$object->getName()) {
-            $this->flashMessage->info('You must select a category and a name together');
-            $this->context->addViolation('You must select a category and a name together');
+            $this->context->buildValidation('You must select a category and a name together')
+                          ->addViolation('You must select a category and a name together');
         }
     }
 }
