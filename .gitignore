@@ -11,8 +11,11 @@
 /bin/
 /web/css/
 /web/js/
+/web/fonts
+/web/public
 /composer.phar
 .DS_Store
 .vagrant
 .idea
 /default
+/cache

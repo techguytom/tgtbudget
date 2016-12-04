@@ -1,46 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8"/>
-    <title>{% block title %}TGT Budget App{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet" media="screen">
-    {% stylesheets '@AppBundle/Resources/views/css/*' %}
-    <link rel="stylesheet" href="{{ asset_url }}"/>
-    {% endstylesheets %}
-    {% block stylesheets %}{% endblock %}
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 
-    <!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
-    {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
+    <!-- THERE SHOULD BE CSS RIGHT BELOW ME -->
+    {% stylesheets '@AppBundle/Resources/public/css/*' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <!-- THERE SHOULD BE CSS RIGHT ABOVE ME -->
+
+    <title>{% block title %}TGT Budget App{% endblock %}</title>
 </head>
-<body role="document">
-<nav class="navbar navbar-default navbar-static-top" role="navigation">
+<body class="{% block body_classes %}{% endblock %}">
+    {% include 'navigation.html.twig' %}
+    {% include 'flashbag.html.twig' %}
     <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-nav">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/" title="TGT Bundle">TGT Budget</a>
-        </div>
-        <div id="main-nav" class="navbar-collapse collapse">
-            {{ knp_menu_render('main', { 'style': 'navbar' }) }}
-        </div>
+        {% block body %}{% endblock %}
     </div>
-</nav>
-<div class="container" role="main">
-    {% include 'BraincraftedBootstrapBundle::flash.html.twig' %}
-    {% block body %}
+    {% include 'footer.html.twig' %}
+    {% block javascripts %}
+        {% javascripts
+        '@AppBundle/Resources/public/js/jquery-3.1.1.min.js'
+        '@AppBundle/Resources/public/js/*' %}
+        <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
     {% endblock %}
-</div>
-<!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
-<script src="{{ asset('js/jquery.js') }}"></script>
-<!-- Include all JavaScripts, compiled by Assetic -->
-<script src="{{ asset('js/bootstrap.js') }}"></script>
-{% block javascripts %}{% endblock %}
 </body>
 </html>

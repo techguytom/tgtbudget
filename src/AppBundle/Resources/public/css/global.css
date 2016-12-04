@@ -1,0 +1,12 @@
+#accountFilter {
+    padding-bottom: 1em;
+}
+.fa-check-square-o {
+    color: green;
+}
+.fa-minus-square-o {
+    color: red;
+}
+.form-inline select {
+    margin-right: 1%;
+}

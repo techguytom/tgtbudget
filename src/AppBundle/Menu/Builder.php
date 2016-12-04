@@ -3,49 +3,45 @@
 namespace AppBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
+use /** @noinspection PhpUndefinedClassInspection */
+    Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+
+/** @noinspection PhpUndefinedClassInspection */
 
 /**
  * Class Builder
  *
  * @package AppBundle\Menu
  */
-class Builder
+class Builder implements ContainerAwareInterface
 {
-    /**
-     * @var FactoryInterface
-     */
-    private $factory;
-
-    /**
-     * Constructor
-     *
-     * @param $factory FactoryInterface
-     */
-    public function __construct(FactoryInterface $factory)
-    {
-        $this->factory = $factory;
-    }
+    use ContainerAwareTrait;
 
     /**
      * Main Menu
      *
-     * @param $request Request
+     * @param FactoryInterface $factory
+     * @param array            $options
      *
      * @return \Knp\Menu\ItemInterface
      */
-    public function createMainMenu(Request $request)
+    public function mainMenu(FactoryInterface $factory, array $options)
     {
-        $menu = $this->factory->createItem('root');
+        $menu = $factory->createItem('root')
+                        ->setChildrenAttribute(
+                            'class',
+                            'nav navbar-nav'
+                        );
 
-        $menu->addChild('Home', array('route' => 'userHomepage'));
-        $menu->addChild('Transactions', array('route' => 'transaction'));
-        $menu->addChild('Accounts', array('route' => 'account'));
-        $menu->addChild('Bills', array('route' => 'bills'));
-        $menu->addChild('Settings', array('uri' => '#'));
-        $menu['Settings']->addChild('Account Types', array('route' => 'accountTypes'));
-        $menu['Settings']->addChild('Budget Categories', array('route' => 'categories'));
-//        $menu['Settings']->addChild('General', array('route' => 'general_settings'));
+        $menu->addChild('Home', ['route' => 'userHomepage', 'attributes' => ['id' => 'back_to_homepage']]);
+        $menu->addChild('Transactions', ['route' => 'transaction']);
+        $menu->addChild('Accounts', ['route' => 'account']);
+        $menu->addChild('Bills', ['route' => 'bills']);
+        $menu->addChild('Settings', ['uri' => '#'])
+             ->setAttribute('dropdown', true);
+        $menu['Settings']->addChild('Account Types', ['route' => 'accountTypes']);
+        $menu['Settings']->addChild('Budget Categories', ['route' => 'categories']);
 
         return $menu;
     }
